@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'agf',
+    'agf_documents',
+    'agf_assets',
+    'agf_files',
 ]
 
 MIDDLEWARE = [
