@@ -1,0 +1,251 @@
+{% extends 'agf_documents/base.html' %}
+{% block title %}
+Documents - Dashboard
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+
+    <!-- Documents/Drawings Tabs -->
+    <ul class="nav nav-tabs" style="border-top: 1px solid #dee2e6;">
+        <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#documents">Documents</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#drawings">Drawings</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Documents -->
+        <div id="documents" class="tab-pane fade show active">
+
+            <!-- Area Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#alldocuments">All Areas</a></li>
+                
+                {% for area in areas %}
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#doc-area-{{area.code}}">{{area.code}}</a></li>
+                {% endfor %}
+
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- All Areas -->
+                <div id="alldocuments" class="tab-pane fade show active">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-body">
+                            <h5>All Areas</h5>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    {% for type in documentTypes %}
+                                    {% if type.drawing == False %}
+                                    <div class="col-lg-1 p-0 m-2 link" onclick="displayTable('table-{{type.code}}')">
+                                        <div class="card" style="width: 100%; height:100%;">
+                                            <div class="card-body p-2">
+                                                <h5>{{type.code}}</h5>
+                                                <p class="m-1">{{type.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Iterate for each area -->
+                {% for area in areas %}
+                <div id="doc-area-{{area.code}}" class="tab-pane fade">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-body">
+                            <h5>{{area.name}}</h5>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    {% for type in documentTypes %}
+                                    {% if type.drawing == False %}
+                                    <div class="col-lg-1 p-0 m-2 link" onclick="displayTable('table-{{area.code}}-{{type.code}}')">
+                                        <div class="card" style="width: 100%; height:100%;">
+                                            <div class="card-body p-2">
+                                                <h5>{{type.code}}</h5>
+                                                <p class="m-1">{{type.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Drawings -->
+        <div id="drawings" class="tab-pane fade">
+            <!-- Area Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#alldrawings">All Areas</a></li>
+                
+                {% for area in areas %}
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#draw-area-{{area.code}}">{{area.code}}</a></li>
+                {% endfor %}
+
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- All Areas -->
+                <div id="alldrawings" class="tab-pane fade show active">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-body">
+                            <h5>All Areas</h5>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    {% for type in documentTypes %}
+                                    {% if type.drawing == True %}
+                                    <div class="col-lg-1 p-0 m-2 link" onclick="displayTable('table-{{type.code}}')">
+                                        <div class="card" style="width: 100%; height:100%;">
+                                            <div class="card-body p-2">
+                                                <h5>{{type.code}}</h5>
+                                                <p class="m-1">{{type.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Iterate for each area -->
+                {% for area in areas %}
+                <div id="draw-area-{{area.code}}" class="tab-pane fade">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-body">
+                            <h5>{{area.name}}</h5>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    {% for type in documentTypes %}
+                                    {% if type.drawing == True %}
+                                    <div class="col-lg-1 p-0 m-2 link" onclick="displayTable('table-{{area.code}}-{{type.code}}')">
+                                        <div class="card" style="width: 100%; height:100%;">
+                                            <div class="card-body p-2">
+                                                <h5>{{type.code}}</h5>
+                                                <p class="m-1">{{type.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Show Documents -->
+    <div class="container-fluid">
+
+        {% for type in documentTypes %}
+        <table id="table-{{type.code}}" class="table table-striped" style="display:none; width: auto;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Document</th>
+                    <th>Rev</th>
+                    <th>Issue Reason</th>
+                    <th>Open</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+
+            {% for document in type.type_documents.all %}
+            
+            <tr>
+                <td>{{document}}</td>
+                {% for revision in document.revisions.all %}
+                {% if revision.get_status_display == "Current Issue" %}
+
+                <td>{{revision.revision}}</td>
+                <td>{{revision.get_reason_display}}</td>
+
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% for area in areas %}
+        <table id="table-{{area.code}}-{{type.code}}" class="table table-striped" style="display:none; width: auto;">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Document</th>
+                    <th>Rev</th>
+                    <th>Issue Reason</th>
+                    <th>Open</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+
+            {% for document in type.type_documents.all %}
+            {% if document.area == area %}
+            <tr>
+                <td>{{document}}</td>
+                {% for revision in document.revisions.all %}
+                {% if revision.get_status_display == "Current Issue" %}
+
+                <td>{{revision.revision}}</td>
+                <td>{{revision.get_reason_display}}</td>
+
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+        {% endfor %}
+        {% endfor %}
+
+    </div>
+ 
+</div>
+
+<script>
+    function hideAllTables(){
+        var elements = document.querySelectorAll("[id^='table']");
+        for(let i = 0; i < elements.length; i++){
+            elements[i].style.display = 'none';
+        }
+    }
+
+    function displayTable(id){
+        hideAllTables()
+
+        element = document.getElementById(id)
+        element.style.display = 'table';
+    }
+</script>
+
+{% endblock %}

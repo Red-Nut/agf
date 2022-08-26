@@ -27,6 +27,7 @@ class PetroleumLicence(models.Model):
     PPL = 3
     PFL = 4
     PCA = 5
+
     TYPE = (
         (ATP, _('Authority to Prospect')),
         (PL, _('Petroleum License')),
@@ -35,17 +36,37 @@ class PetroleumLicence(models.Model):
         (PCA, _('Prospective Commercial Area')),
     )
 
+    ACTIVE = 1
+    EXPIRED = 2
+    CANCELLED = 3
+    APPLICATION = 3
+
+    STATUS = (
+        (ACTIVE, _('Active')),
+        (EXPIRED, _('Expired')),
+        (CANCELLED, _('Cancelled')),
+        (APPLICATION, _('Application')),
+    )
+
     type=models.PositiveSmallIntegerField(choices=TYPE)
     number=models.IntegerField()
     name=models.CharField(max_length=255)
-    granted=models.DateField()
-    term=models.IntegerField() #months
-    extension_start=models.DateField(
-        null=True,
-        blank=True
+    status=models.PositiveSmallIntegerField(choices=STATUS)
+    granted=models.DateField(null=True, blank=True)
+    term=models.IntegerField(null=True, blank=True) #months
+    extension_start=models.DateField(null=True, blank=True)
+    extension_term=models.IntegerField(null=True, blank=True) #months
+    epa=models.ForeignKey(
+        EPA, 
+        null=True, 
+        blank=True, 
+        on_delete=models.RESTRICT, 
+        related_name='petroleum_licenses'
     )
-    extension_term=models.IntegerField() #months
-    epa=models.ForeignKey(EPA, on_delete=models.RESTRICT, related_name='petroleum_licenses')
+
+class ReplacementPL(models.Model):
+    permit=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='replacement_PL')
+    replacement=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='previous_PL')
 
 # Asset Area
 class Area (models.Model):
