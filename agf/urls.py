@@ -20,8 +20,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Documents
-    path('documents/', include('agf_documents.urls'))
+    path('documents/', include('agf_documents.urls')),
 
     # Assets
-    path('assets/', include('agf_assets.urls'))
+    path('assets/', include('agf_assets.urls')),
 ]
