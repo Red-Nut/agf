@@ -167,72 +167,179 @@ Documents - Dashboard
 
 
     <!-- Show Documents -->
-    <div class="container-fluid">
+    <div style="display: none" id="jsonData" data-json="{{ data }}"></div>
+    <div class="container-fluid" id="myTables">
 
-        {% for type in documentTypes %}
-        <table id="table-{{type.code}}" class="table table-striped" style="display:none; width: auto;">
+        <!--
+        {% for table in tablessAllAreas %}
+        <table id="{{table.id}}" class="table table-striped" style="display:none">
             <thead class="thead-dark">
                 <tr>
                     <th>Document</th>
-                    <th>Rev</th>
-                    <th>Issue Reason</th>
-                    <th>Open</th>
-                    <th>Download</th>
+                    <th style="text-align: center;">Rev</th>
+                    <th>Name</th>
+                    <th style="text-align: center;">Issue Reason</th>
+                    <th style="text-align: center;">Legacy Number</th>
+                    <th style="text-align: center;">Open</th>
+                    <th style="text-align: center;">Download</th>
                 </tr>
             </thead>
 
-            {% for document in type.type_documents.all %}
+            {% for document in table.documents %}
             
             <tr>
                 <td>{{document}}</td>
                 {% for revision in document.revisions.all %}
                 {% if revision.get_status_display == "Current Issue" %}
 
-                <td>{{revision.revision}}</td>
-                <td>{{revision.get_reason_display}}</td>
+                <td style="text-align: center;">{{revision.revision|default_if_none:"N/A"}}</td>
+                <td>{{document.name}}</td>
+                <td style="text-align: center;">{{revision.get_reason_display|default_if_none:"-"}}</td>
+                <td style="text-align: center;">{{document.legacy_no|default_if_none:"-"}}</td>
+                <td style="text-align: center;"><i class="fas fa-file"></i></td>
+                <td style="text-align: center;"><i class="fas fa-file-download"></i></td>
 
                 {% endif %}
                 {% endfor %}
             </tr>
             {% endfor %}
         </table>
+        {% endfor %}
 
-        {% for area in areas %}
-        <table id="table-{{area.code}}-{{type.code}}" class="table table-striped" style="display:none; width: auto;">
+        {% for area in tablessPerArea %}
+        {% for table in area %}
+        <table id="{{table.id}}" class="table table-striped" style="display:none">
             <thead class="thead-dark">
                 <tr>
                     <th>Document</th>
-                    <th>Rev</th>
-                    <th>Issue Reason</th>
-                    <th>Open</th>
-                    <th>Download</th>
+                    <th style="text-align: center;">Rev</th>
+                    <th>Name</th>
+                    <th style="text-align: center;">Issue Reason</th>
+                    <th style="text-align: center;">Legacy Number</th>
+                    <th style="text-align: center;">Open</th>
+                    <th style="text-align: center;">Download</th>
                 </tr>
             </thead>
 
-            {% for document in type.type_documents.all %}
-            {% if document.area == area %}
+            {% for document in table.documents %}
+            
             <tr>
                 <td>{{document}}</td>
                 {% for revision in document.revisions.all %}
                 {% if revision.get_status_display == "Current Issue" %}
 
-                <td>{{revision.revision}}</td>
-                <td>{{revision.get_reason_display}}</td>
+                <td style="text-align: center;">{{revision.revision|default_if_none:"N/A"}}</td>
+                <td>{{document.name}}</td>
+                <td style="text-align: center;">{{revision.get_reason_display|default_if_none:"-"}}</td>
+                <td style="text-align: center;">{{document.legacy_no|default_if_none:"-"}}</td>
+                <td style="text-align: center;"><i class="fas fa-file"></i></td>
+                <td style="text-align: center;"><i class="fas fa-file-download"></i></td>
 
                 {% endif %}
                 {% endfor %}
             </tr>
-            {% endif %}
             {% endfor %}
         </table>
         {% endfor %}
         {% endfor %}
-
+        
+        -->
     </div>
+    
  
 </div>
 
 <script>
+    window.onload = function () {
+        var jsonData = loadJson('#jsonData');
+
+        var revision = jsonData.map((item) => item.revision);
+        var status = jsonData.map((item) => item.status);
+        var reason = jsonData.map((item) => item.reason);
+        var area = jsonData.map((item) => item.area);
+        var type = jsonData.map((item) => item.type);
+        var sub_type = jsonData.map((item) => item.sub_type);
+        var document_no = jsonData.map((item) => item.document_no);
+        var name = jsonData.map((item) => item.name);
+        var legacy_no = jsonData.map((item) => item.legacy_no);
+        var link = jsonData.map((item) => item.link);
+
+        tablehead = ""
+        tablehead += '    <thead class="thead-dark">';
+        tablehead += '        <tr>';
+        tablehead += '            <th>Document</th>';
+        tablehead += '            <th style="text-align: center;">Rev</th>';
+        tablehead += '            <th>Name</th>';
+        tablehead += '            <th style="text-align: center;">Issue Reason</th>';
+        tablehead += '            <th style="text-align: center;">Legacy Number</th>';
+        tablehead += '            <th style="text-align: center;">Open</th>';
+        tablehead += '            <th style="text-align: center;">Download</th>';
+        tablehead += '        </tr>';
+        tablehead += '    </thead>';
+
+        htmlallareas = ""
+        htmlareas = ""
+
+        ac = area[0]
+        tc = type[0]
+
+        for(i=0; i < document_no.length; i++){
+            pac = ac
+            ptc = tc
+            ac = area[i]
+            tc = type[i]
+
+            if(i==0){
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+
+                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
+                htmlallareas += tablehead;
+
+            } else if (ptc != tc) {
+                htmlareas += '</table>'
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+
+                htmlallareas += '</table>'
+                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
+                htmlallareas += tablehead;
+
+            } else if (pac != ac){
+                htmlareas += '</table>'
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+            }
+
+            htmlbody = "";
+            htmlbody += '<tr>';
+            htmlbody += '    <td>' + document_no[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + revision[i] + '</td>';
+            htmlbody += '    <td>' + name[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + reason[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + legacy_no[i] + '</td>';
+            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" target="_blank"><i class="fas fa-file"></i></a></td>';
+            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" download><i class="fas fa-file-download"></i></a></td>';
+
+            htmlbody += '</tr>';
+
+            htmlareas += htmlbody;
+            htmlallareas += htmlbody;
+            
+        }
+        htmlareas += '</table>';
+        htmlallareas += '</table>';
+
+        html = htmlareas + htmlallareas;
+        document.getElementById("myTables").innerHTML = html;
+    }
+
+    function loadJson(selector) {
+        return JSON.parse(document.querySelector(selector).getAttribute('data-json'));
+    }
+
+    
+
     function hideAllTables(){
         var elements = document.querySelectorAll("[id^='table']");
         for(let i = 0; i < elements.length; i++){
