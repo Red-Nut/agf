@@ -24,40 +24,86 @@ class Document (models.Model):
     type=models.ForeignKey(DocumentType, on_delete=models.RESTRICT, related_name='type_documents')
     sub_type=models.ForeignKey(DocumentSubType, null=True, blank=True, on_delete=models.RESTRICT, related_name='sub_type_documents')
     sequential_no=models.IntegerField()
+    suffix=models.CharField(max_length=10,null=True, blank=True)
+    sheet=models.IntegerField(null=True, blank=True)
+    name=models.CharField(max_length=255)
     legacy_no=models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         document_no = f"{self.area.code}-{self.type.code}-"
         n = self.sequential_no
         if(n > 999):
-            document_no = ' '.join([document_no,str(n)])
+            document_no += str(n)
         elif(n > 99):
-            document_no = ' '.join([document_no,'0',str(n)])
+            document_no += "0" + str(n)
         elif(n > 9):
-            document_no = ' '.join([document_no,'00',str(n)])
+            document_no += "00" + str(n)
         else:
-            document_no = ' '.join([document_no,'000',str(n)])
+            document_no += "000" + str(n)
+
+        return document_no
+
+    def document_no(self):
+        document_no = f"{self.area.code}-{self.type.code}-"
+        n = self.sequential_no
+        if(n > 999):
+            document_no += str(n)
+        elif(n > 99):
+            document_no += "0" + str(n)
+        elif(n > 9):
+            document_no += "00" + str(n)
+        else:
+            document_no += "000" + str(n)
+
+        if self.suffix is not None:
+            document_no += "-" + self.suffix
+        
+        if self.sheet is not None:
+            if(self.sheet > 9):
+                document_no += f"-{self.sheet}"
+            else:
+                document_no += f"-0{self.sheet}"
+
+        return document_no
+
+    def name_with_legacy(self):
+        document_no = f"{self.area.code}-{self.type.code}-"
+        n = self.sequential_no
+        if(n > 999):
+            document_no += str(n)
+        elif(n > 99):
+            document_no += "0" + str(n)
+        elif(n > 9):
+            document_no += "00" + str(n)
+        else:
+            document_no += "000" + str(n)
+
+        if self.suffix is not None:
+            document_no += "-" + self.suffix
+
+        if self.sheet is not None:
+            if(self.sheet > 9):
+                document_no += f"-{self.sheet}"
+            else:
+                document_no += f"-0{self.sheet}"
+            
 
         if self.legacy_no is None:
             return document_no
         else:
             return f"{document_no} ({self.legacy_no})"
 
-    def document_no(self):
-        document_no = f"{self.area.code}-{self.type.code}-"
-        n = self.sequential_no
-        if(n > 999):
-            document_no = ' '.join(document_no,str(n))
-        elif(n > 99):
-            document_no = ' '.join(document_no,'0',str(n))
-        elif(n > 9):
-            document_no = ' '.join(document_no,'00',str(n))
+    def my_sub_type_name_display(self):
+        if self.sub_type is None:
+            return "None"
         else:
-            document_no = ' '.join(document_no,'000',str(n))
+            return self.sub_type.name
 
-        return document_no
-
-    
+    def my_legacy_no_display(self):
+        if self.legacy_no is None:
+            return "-"
+        else:
+            return self.legacy_no
 
 class DocumentRevision (models.Model):
     DRAFT = 1
@@ -97,9 +143,29 @@ class DocumentRevision (models.Model):
     )
 
     document=models.ForeignKey(Document, on_delete=models.CASCADE, related_name='revisions')
-    revision=models.CharField(max_length=10)
-    reason=models.PositiveSmallIntegerField(choices=REASON)
+    revision=models.CharField(max_length=10, null=True, blank=True)
+    reason=models.PositiveSmallIntegerField(choices=REASON,null=True, blank=True)
     status=models.PositiveSmallIntegerField(choices=STATUS)
+
+    def my_revision_display(self):
+        if self.revision is None:
+            return "N/A"
+        else:
+            return self.revision
+
+    def my_reason_display(self):
+        if self.reason is None:
+            return "-"
+        else:
+            return self.get_reason_display()
+
+    def my_link(self):
+        files = self.document_files.all()
+        try:
+            file = files[0].file
+            return f"{file.location}{file.name}.{file.ext}" 
+        except:
+            return "#"
 
 class DocumentReference (models.Model):
     document=models.ForeignKey(Document, on_delete=models.CASCADE, related_name='reference_documents')
