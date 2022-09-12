@@ -102,6 +102,7 @@ class Asset (models.Model):
         (REMOVED, _('Removed')),
     )
 
+    name=models.CharField(max_length=255, null=True, blank=True)
     type=models.ForeignKey(AssetType, on_delete=models.RESTRICT, related_name='type_assets')
     area=models.ForeignKey(Area, on_delete=models.RESTRICT, related_name='area_assets')
     sequential_no=models.IntegerField()
