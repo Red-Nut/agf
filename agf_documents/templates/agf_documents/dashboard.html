@@ -170,80 +170,7 @@ Documents - Dashboard
     <div style="display: none" id="jsonData" data-json="{{ data }}"></div>
     <div class="container-fluid" id="myTables">
 
-        <!--
-        {% for table in tablessAllAreas %}
-        <table id="{{table.id}}" class="table table-striped" style="display:none">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Document</th>
-                    <th style="text-align: center;">Rev</th>
-                    <th>Name</th>
-                    <th style="text-align: center;">Issue Reason</th>
-                    <th style="text-align: center;">Legacy Number</th>
-                    <th style="text-align: center;">Open</th>
-                    <th style="text-align: center;">Download</th>
-                </tr>
-            </thead>
-
-            {% for document in table.documents %}
-            
-            <tr>
-                <td>{{document}}</td>
-                {% for revision in document.revisions.all %}
-                {% if revision.get_status_display == "Current Issue" %}
-
-                <td style="text-align: center;">{{revision.revision|default_if_none:"N/A"}}</td>
-                <td>{{document.name}}</td>
-                <td style="text-align: center;">{{revision.get_reason_display|default_if_none:"-"}}</td>
-                <td style="text-align: center;">{{document.legacy_no|default_if_none:"-"}}</td>
-                <td style="text-align: center;"><i class="fas fa-file"></i></td>
-                <td style="text-align: center;"><i class="fas fa-file-download"></i></td>
-
-                {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-        {% endfor %}
-
-        {% for area in tablessPerArea %}
-        {% for table in area %}
-        <table id="{{table.id}}" class="table table-striped" style="display:none">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Document</th>
-                    <th style="text-align: center;">Rev</th>
-                    <th>Name</th>
-                    <th style="text-align: center;">Issue Reason</th>
-                    <th style="text-align: center;">Legacy Number</th>
-                    <th style="text-align: center;">Open</th>
-                    <th style="text-align: center;">Download</th>
-                </tr>
-            </thead>
-
-            {% for document in table.documents %}
-            
-            <tr>
-                <td>{{document}}</td>
-                {% for revision in document.revisions.all %}
-                {% if revision.get_status_display == "Current Issue" %}
-
-                <td style="text-align: center;">{{revision.revision|default_if_none:"N/A"}}</td>
-                <td>{{document.name}}</td>
-                <td style="text-align: center;">{{revision.get_reason_display|default_if_none:"-"}}</td>
-                <td style="text-align: center;">{{document.legacy_no|default_if_none:"-"}}</td>
-                <td style="text-align: center;"><i class="fas fa-file"></i></td>
-                <td style="text-align: center;"><i class="fas fa-file-download"></i></td>
-
-                {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-        {% endfor %}
-        {% endfor %}
         
-        -->
     </div>
     
  
@@ -253,6 +180,7 @@ Documents - Dashboard
     window.onload = function () {
         var jsonData = loadJson('#jsonData');
 
+        var id = jsonData.map((item) => item.id);
         var revision = jsonData.map((item) => item.revision);
         var status = jsonData.map((item) => item.status);
         var reason = jsonData.map((item) => item.reason);
@@ -312,7 +240,7 @@ Documents - Dashboard
             }
 
             htmlbody = "";
-            htmlbody += '<tr>';
+            htmlbody += '<tr class="link" onclick="window.location.href=' + "'/documents/document/"+ id[i] + "/'" + '">';
             htmlbody += '    <td>' + document_no[i] + '</td>';
             htmlbody += '    <td style="text-align: center;">' + revision[i] + '</td>';
             htmlbody += '    <td>' + name[i] + '</td>';

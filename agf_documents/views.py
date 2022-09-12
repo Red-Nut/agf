@@ -22,6 +22,7 @@ class Index(TemplateView):
         context['data'] = json.dumps(
             [
                 {
+                    'id': obj.id,
                     'revision': obj.my_revision_display(),
                     'status': obj.get_status_display(),
                     'reason': obj.my_reason_display(),
@@ -39,6 +40,19 @@ class Index(TemplateView):
 
         return context
 
+def DocumentPage(request, id):
+    document = Document.objects.get(id=id)
+
+    assets = AssetDocumentReference.objects.filter(document=document).all()
+
+
+
+    context = {
+        'document' : document,
+        'assets' : assets,
+    }
+
+    return render(request, "agf_documents/document.html", context)
 
 def Dashboard(request):
     areas = Area.objects.order_by("code").all()

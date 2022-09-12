@@ -17,6 +17,9 @@ class DocumentType (models.Model):
 class DocumentSubType (models.Model):
     name=models.CharField(max_length=255)
     type=models.ForeignKey(DocumentType, on_delete=models.RESTRICT, related_name='sub_types')
+    
+    def __str__(self):
+        return f"{self.name}"
 
 # Document
 class Document (models.Model):

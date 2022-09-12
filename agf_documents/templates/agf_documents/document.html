@@ -1,0 +1,211 @@
+{% extends 'agf_documents/base.html' %}
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <h1>{{document.document_no}}</h1>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table" style="width: auto;">
+                        <tr>
+                            <th>Document No.</th>
+                            <td>{{document.document_no}}</td>
+                        </tr>
+                        {% if document.legacy_no is not None %}
+                        <tr>
+                            <th>Type</th>
+                            <td>{{document.legacy_no}}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Name</th>
+                            <td>{{document.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{document.type}}</td>
+                        </tr>
+                        {% if document.sub_type is not None %}
+                        <tr>
+                            <th>Sub-Type</th>
+                            <td>{{document.sub_type}}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Area</th>
+                            <td>{{document.area}}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{document.type}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <!-- Reference Documents -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Reference Documents</b></h4></th></tr>
+                        <tr>
+                            <th>Document Number</th>
+                            <th>Name</th>
+                        </tr>
+                        {% for ref in document.reference_documents.all %}
+                        <tr>
+                            <td>{{ref.reference_document.document_no}}</td>
+                            <td>{{ref.reference_document.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Documents Referring to This</b></h4></th></tr>
+                        <tr>
+                            <th>Document Number</th>
+                            <th>Name</th>
+                        </tr>
+                        {% for ref in document.documents_referred_by.all %}
+                        <tr>
+                            <td>{{ref.document.document_no}}</td>
+                            <td>{{ref.document.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Preview -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Assets -->
+        <div class="col">
+            <!-- Equipment -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Equipment</b></h4></th></tr>
+                        <tr>
+                            <th>Asset Number</th>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Legacy Number</th>
+                        </tr>
+                        {% for assetref in document.assets_referred_by.all %}
+                        {% if assetref.asset.type.category.name == "Equipment" %}
+                        <tr>
+                            <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.type.name}}</td>
+                            <td>{{assetref.asset.name}}</td>
+                            <td>{{assetref.asset.get_status_display}}</td>
+                            <td>{{assetref.asset.get_legacy_display}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+            <!-- Instruments -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Instruments</b></h4></th></tr>
+                        <tr>
+                            <th>Asset Number</th>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Legacy Number</th>
+                        </tr>
+                        {% for assetref in document.assets_referred_by.all %}
+                        {% if assetref.asset.type.category.name == "Instrument" %}
+                        <tr>
+                            <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.type.name}}</td>
+                            <td>{{assetref.asset.name}}</td>
+                            <td>{{assetref.asset.get_status_display}}</td>
+                            <td>{{assetref.asset.get_legacy_display}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+            <!-- Line Numbers -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Line Numbers</b></h4></th></tr>
+                        <tr>
+                            <th>Line Number</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>line_content</th>
+                            <th>line_rating</th>
+                        </tr>
+                        {% for assetref in document.assets_referred_by.all %}
+                        {% if assetref.asset.type.category.name == "Line" %}
+                        <tr>
+                            <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.type.name}}</td>
+                            <td>{{assetref.asset.size}}</td>
+                            <td>{{assetref.asset.line_content.name}}</td>
+                            <td>{{assetref.asset.line_rating.name}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+            <!-- Valves -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Valves</b></h4></th></tr>
+                        <tr>
+                            <th>Valve Number</th>
+                            <th>Size</th>
+                            <th>Valve Spec</th>
+                        </tr>
+                        {% for assetref in document.assets_referred_by.all %}
+                        {% if assetref.asset.type.category.name == "Valve" %}
+                        <tr>
+                            <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.valve_spec}}</td>
+                            <td>{{assetref.asset.size}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+{% endblock %}

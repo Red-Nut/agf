@@ -74,6 +74,9 @@ class Area (models.Model):
     code=models.CharField(max_length=10)
     permit=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='areas')
 
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+
 # Assets
 class AssetCategory (models.Model):
     name=models.CharField(max_length=255)
@@ -113,6 +116,23 @@ class Asset (models.Model):
     line_rating=models.ForeignKey(LineRating, null=True, blank=True, on_delete=models.RESTRICT, related_name='line_rating_assets')
     valve_spec=models.CharField(max_length=10, null=True, blank=True)
     size=models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
+
+    def get_asset_no(self):
+        if(self.type.category.name == "Line"):
+            return f"{self.size:03}-{self.line_content.code}-{self.sequential_no:03}-{self.line_rating.code}"
+        elif(self.type.category.name == "Valve"):
+            return f"{self.valve_spec}-{self.sequential_no:03}"
+        else:
+            return f"{self.type.code}-{self.sequential_no:04}"
+
+    def get_legacy_display(self):
+        if self.legacy_no is None:
+            return "-"
+        else:
+            return f"{self.legacy_no}"
     
 class AssetHierachy (models.Model):
     asset=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='parent')
