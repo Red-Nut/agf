@@ -10,8 +10,8 @@ Name
 <div class="container-fluid">
     <h1>{{document.document_no}}</h1>
     <div class="row">
-        <div class="col">
-            <div class="card">
+        <div class="col mb-3">
+            <div class="card mb-0">
                 <div class="card-body">
                     <table class="table" style="width: auto;">
                         <tr>
@@ -50,7 +50,45 @@ Name
                 </div>
             </div>
         </div>
+        <div class="col mb-3">
+            <!-- Revisions -->
+            <div class="card mb-0" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Document Revisions</b></h4></th></tr>
+                        <tr>
+                            <th>Status</th>
+                            <th>Revision</th>
+                            <th>Reason</th>
+                            <th>Files</th>
+                        </tr>
+                        {% for rev in document.revisions.all %}
+                        <tr>
+                            <td>{{rev.get_status_display}}</td>
+                            <td>{{rev.revision}}</td>
+                            <td>{{rev.get_reason_display}}</td>
+                            <td>
+                                {% for file in rev.document_files.all %}
+                                <a href="{{file.file.url}}" target="_blank">{{file.file}}</a>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col">
+            <!-- Preview -->
+            <div class="card">
+                <div class="card-body">
+                    <iframe src="{{documentFile.file.url}}" width="100%" height="auto"></iframe>
+                </div>
+            </div>
+
             <!-- Reference Documents -->
             <div class="card">
                 <div class="card-body">
@@ -83,19 +121,9 @@ Name
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <!-- Preview -->
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-
-                </div>
-
-            </div>
-        </div>
         
+        
+
         <!-- Assets -->
         <div class="col">
             <!-- Equipment -->

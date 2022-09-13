@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 import json
 
 from agf_documents.models import DocumentRevision
+from agf_files.models import DocumentFile
 
 # This module imports
 from .models import *
@@ -43,13 +44,15 @@ class Index(TemplateView):
 def DocumentPage(request, id):
     document = Document.objects.get(id=id)
 
-    assets = AssetDocumentReference.objects.filter(document=document).all()
+    documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
 
-
+    documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
+    if documentFile is None:
+        documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
 
     context = {
         'document' : document,
-        'assets' : assets,
+        'documentFile' : documentFile,
     }
 
     return render(request, "agf_documents/document.html", context)

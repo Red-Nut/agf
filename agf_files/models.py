@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Other module imports
 from agf_documents.models import *
@@ -18,6 +19,9 @@ class File (models.Model):
 
     def link(self):
         return f"{self.location}{self.name}.{self.ext}"
+
+    def url(self):
+        return f"{settings.MEDIA_ROOT}{self.location}{self.name}.{self.ext}"
 
 class FileMeta(models.Model):
     file=models.ForeignKey(File, on_delete=models.CASCADE, related_name='file_metadata')
