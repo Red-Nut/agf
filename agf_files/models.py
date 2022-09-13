@@ -21,7 +21,7 @@ class File (models.Model):
         return f"{self.location}{self.name}.{self.ext}"
 
     def url(self):
-        return f"{settings.MEDIA_ROOT}{self.location}{self.name}.{self.ext}"
+        return f"{settings.MEDIA_URL}{self.location}{self.name}.{self.ext}"
 
 class FileMeta(models.Model):
     file=models.ForeignKey(File, on_delete=models.CASCADE, related_name='file_metadata')
