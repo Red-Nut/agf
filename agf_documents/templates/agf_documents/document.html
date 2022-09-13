@@ -10,8 +10,8 @@ Name
 <div class="container-fluid">
     <h1>{{document.document_no}}</h1>
     <div class="row">
-        <div class="col mb-3">
-            <div class="card mb-0">
+        <div class="col-4">
+            <div class="card">
                 <div class="card-body">
                     <table class="table" style="width: auto;">
                         <tr>
@@ -49,10 +49,8 @@ Name
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="col mb-3">
             <!-- Revisions -->
-            <div class="card mb-0" style="height:100%;">
+            <div class="card">
                 <div class="card-body">
                     <table class="table table-striped">
                         <tr><th colspan="5"><h4><b>Document Revisions</b></h4></th></tr>
@@ -77,18 +75,6 @@ Name
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <!-- Preview -->
-            <div class="card">
-                <div class="card-body">
-                    <iframe src="{{documentFile.file.url}}#toolbar=0&navpanes=0" width="100%" height="600px"></iframe>
-                </div>
-            </div>
-
             <!-- Reference Documents -->
             <div class="card">
                 <div class="card-body">
@@ -121,10 +107,18 @@ Name
                 </div>
             </div>
         </div>
-        
-        
+        <div class="col-8 pb-3">
+            <!-- Preview -->
+            <div class="card mb-0" style="height:100%;">
+                <div class="card-body">
+                    <p class="link" style="text-align:right; position: absolute; right: 30px; top:30px;"><i class="fas fa-expand-arrows-alt fa-2x"></i></p>
+                    <iframe src="{{documentFile.file.url}}#toolbar=0&navpanes=0" width="100%" height="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Assets -->
+    <div class="row">
         <div class="col">
             <!-- Equipment -->
             <div class="card">
@@ -179,6 +173,9 @@ Name
                     </table>
                 </div>
             </div>
+        </div>
+
+        <div class="col">
 
             <!-- Line Numbers -->
             <div class="card">
