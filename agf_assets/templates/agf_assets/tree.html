@@ -1,0 +1,132 @@
+{% extends 'agf_documents/base.html' %}
+{% block title %}
+Asset Tree
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+
+    
+
+
+    <!-- Show Asset Tree -->
+    <div style="display: none" id="jsonData" data-json="{{ data }}"></div>
+    <div class="container-fluid" id="myTables">
+
+        
+    </div>
+    
+ 
+</div>
+
+<script>
+    window.onload = function () {
+        var jsonData = loadJson('#jsonData');
+
+        var id = jsonData.map((item) => item.id);
+        var revision = jsonData.map((item) => item.revision);
+        var status = jsonData.map((item) => item.status);
+        var reason = jsonData.map((item) => item.reason);
+        var area = jsonData.map((item) => item.area);
+        var type = jsonData.map((item) => item.type);
+        var sub_type = jsonData.map((item) => item.sub_type);
+        var document_no = jsonData.map((item) => item.document_no);
+        var name = jsonData.map((item) => item.name);
+        var legacy_no = jsonData.map((item) => item.legacy_no);
+        var link = jsonData.map((item) => item.link);
+
+        tablehead = ""
+        tablehead += '    <thead class="thead-dark">';
+        tablehead += '        <tr>';
+        tablehead += '            <th>Document</th>';
+        tablehead += '            <th style="text-align: center;">Rev</th>';
+        tablehead += '            <th>Name</th>';
+        tablehead += '            <th style="text-align: center;">Issue Reason</th>';
+        tablehead += '            <th style="text-align: center;">Legacy Number</th>';
+        tablehead += '            <th style="text-align: center;">Open</th>';
+        tablehead += '            <th style="text-align: center;">Download</th>';
+        tablehead += '        </tr>';
+        tablehead += '    </thead>';
+
+        htmlallareas = ""
+        htmlareas = ""
+
+        ac = area[0]
+        tc = type[0]
+
+        for(i=0; i < document_no.length; i++){
+            pac = ac
+            ptc = tc
+            ac = area[i]
+            tc = type[i]
+
+            if(i==0){
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+
+                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
+                htmlallareas += tablehead;
+
+            } else if (ptc != tc) {
+                htmlareas += '</table>'
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+
+                htmlallareas += '</table>'
+                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
+                htmlallareas += tablehead;
+
+            } else if (pac != ac){
+                htmlareas += '</table>'
+                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
+                htmlareas += tablehead;
+            }
+
+            htmlbody = "";
+            htmlbody += '<tr class="link" onclick="window.location.href=' + "'/documents/document/"+ id[i] + "/'" + '">';
+            htmlbody += '    <td>' + document_no[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + revision[i] + '</td>';
+            htmlbody += '    <td>' + name[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + reason[i] + '</td>';
+            htmlbody += '    <td style="text-align: center;">' + legacy_no[i] + '</td>';
+            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" target="_blank"><i class="fas fa-file"></i></a></td>';
+            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" download><i class="fas fa-file-download"></i></a></td>';
+
+            htmlbody += '</tr>';
+
+            htmlareas += htmlbody;
+            htmlallareas += htmlbody;
+            
+        }
+        htmlareas += '</table>';
+        htmlallareas += '</table>';
+
+        html = htmlareas + htmlallareas;
+        document.getElementById("myTables").innerHTML = html;
+    }
+
+    function loadJson(selector) {
+        return JSON.parse(document.querySelector(selector).getAttribute('data-json'));
+    }
+
+    
+
+    function hideAllTables(){
+        var elements = document.querySelectorAll("[id^='table']");
+        for(let i = 0; i < elements.length; i++){
+            elements[i].style.display = 'none';
+        }
+    }
+
+    function displayTable(id){
+        hideAllTables()
+
+        element = document.getElementById(id)
+        element.style.display = 'table';
+    }
+</script>
+
+{% endblock %}

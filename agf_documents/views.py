@@ -12,7 +12,7 @@ from .models import *
 from agf_assets.models import *
 
 class Index(TemplateView):
-    template_name="agf_documents/dashboard.html"
+    template_name="agf_assets/tree.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,15 +57,8 @@ def DocumentPage(request, id):
 
     return render(request, "agf_documents/document.html", context)
 
-def Dashboard(request):
-    areas = Area.objects.order_by("code").all()
-    documentTypes = DocumentType.objects.order_by("code").all()
+def Search():
+    pass
 
-    context = {
-        "areas" : areas,
-        "documentTypes" : documentTypes,
-    #    "tablessAllAreas" : tablessAllAreas,
-    #    "tablessPerArea" : tablessPerArea,
-    }
-
-    return render(request, "agf_documents/dashboard.html", context)
+def Create():
+    pass

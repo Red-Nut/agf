@@ -25,7 +25,7 @@
         crossorigin="anonymous">  -->
     <link 
         rel="stylesheet"  
-        href="{% static 'css/documents.css' %}"
+        href="{% static 'css/assets.css' %}"
         type="text/css"/>
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
@@ -46,7 +46,7 @@
                 <div class="px-3 py-1 pe-5 c-navbarbackground">
                     <img src="{% static 'img/logo/transparent.png' %}" height="45" alt="" class="d-inline-block align-middle mr-2">
                     <!-- Logo Text -->
-                    <span class="font-weight-bold align-middle c-base" style="font-size: larger;">Document Management System</span>
+                    <span class="font-weight-bold align-middle" style="font-size: larger; color:white;">Asset Management System</span>
                 </div>
             </a>
 
@@ -58,7 +58,7 @@
             <!-- Navbar -->
             <div class="collapse navbar-collapse" style="font-size: larger"  id="navbarToggler">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'index' %}">Dashboard</a>
+                    <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'index' %}">Asset Tree</a>
                     <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'search' %}">Search</a>
                     <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'create' %}">New</a>
                 </div>

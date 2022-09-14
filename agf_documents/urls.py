@@ -21,6 +21,6 @@ from . import views
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
     path('document/<int:id>/', views.DocumentPage, name='document'),
-    path('search', views.Dashboard, name='search'),
-    path('create', views.Dashboard, name='create'),
+    path('search', views.Search, name='search'),
+    path('create', views.Create, name='create'),
 ]

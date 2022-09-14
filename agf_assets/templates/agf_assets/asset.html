@@ -1,0 +1,109 @@
+{% extends 'agf_assets/base.html' %}
+{% block title %}
+{{asset.get_asset_no}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <h1>{{asset.get_asset_no}}</h1>
+    <div class="row">
+        <div class="col">
+            <!-- Asset Details -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th>Area</th>
+                            <td>{{asset.area}}</td>
+                        </tr>
+                        {% if asset.type.category.name == "Line" %}
+                        <tr>
+                            <th>Type</th>
+                            <td>Line Number</td>
+                        </tr>
+                        {% elif asset.type.category.name == "Valve" %}
+                        <tr>
+                            <th>Type</th>
+                            <td>Valve</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th>Type</th>
+                            <td>{{asset.type}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if asset.name is not None %}
+                        <tr>
+                            <th>Name</th>
+                            <td>{{asset.name}}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Status</th>
+                            <td>{{asset.get_status_display}}</td>
+                        </tr>
+                        {% if asset.legacy_no is not None %}
+                        <tr>
+                            <th>Legacy Number</th>
+                            <td>{{asset.legacy_no}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if asset.size is not None %}
+                        <tr>
+                            <th>Size</th>
+                            <td>{{asset.size}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if asset.line_content is not None %}
+                        <tr>
+                            <th>Line Content</th>
+                            <td>{{asset.line_content}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if asset.line_rating is not None %}
+                        <tr>
+                            <th>Line Rating</th>
+                            <td>{{asset.line_rating}}</td>
+                        </tr>
+                        {% endif %}
+                        {% if asset.valve_spec is not None %}
+                        <tr>
+                            <th>Valve Specification</th>
+                            <td>{{asset.valve_spec}}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <!-- Reference Documents -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th colspan="2">Reference Documents</th>
+                        </tr>
+                        <tr>
+                            <th>Document Number</th>
+                            <th>Title</th>
+                        </tr>
+                        {% for ref in asset.asset_document_reference.all %}
+                        <tr class="link" onclick="window.location.href='/documents/document/{{ref.document.id}}/'">
+                            <td>{{ref.document.document_no}}</td>
+                            <td>{{ref.document.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

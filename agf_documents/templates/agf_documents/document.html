@@ -134,7 +134,7 @@ Name
                         </tr>
                         {% for assetref in document.assets_referred_by.all %}
                         {% if assetref.asset.type.category.name == "Equipment" %}
-                        <tr>
+                        <tr class="link" onclick="window.location.href='/assets/asset/{{assetref.asset.id}}/'">
                             <td>{{assetref.asset.get_asset_no}}</td>
                             <td>{{assetref.asset.type.name}}</td>
                             <td>{{assetref.asset.name}}</td>
@@ -161,7 +161,7 @@ Name
                         </tr>
                         {% for assetref in document.assets_referred_by.all %}
                         {% if assetref.asset.type.category.name == "Instrument" %}
-                        <tr>
+                        <tr class="link" onclick="window.location.href='/assets/asset/{{assetref.asset.id}}/'">
                             <td>{{assetref.asset.get_asset_no}}</td>
                             <td>{{assetref.asset.type.name}}</td>
                             <td>{{assetref.asset.name}}</td>
@@ -190,8 +190,8 @@ Name
                             <th>line_rating</th>
                         </tr>
                         {% for assetref in document.assets_referred_by.all %}
-                        {% if assetref.asset.type.category.name == "Line" %}
-                        <tr>
+                        {% if assetref.asset.type.category.name == "Line Number" %}
+                        <tr class="link" onclick="window.location.href='/assets/asset/{{assetref.asset.id}}/'">
                             <td>{{assetref.asset.get_asset_no}}</td>
                             <td>{{assetref.asset.type.name}}</td>
                             <td>{{assetref.asset.size}}</td>
@@ -216,7 +216,7 @@ Name
                         </tr>
                         {% for assetref in document.assets_referred_by.all %}
                         {% if assetref.asset.type.category.name == "Valve" %}
-                        <tr>
+                        <tr class="link" onclick="window.location.href='/assets/asset/{{assetref.asset.id}}/'">
                             <td>{{assetref.asset.get_asset_no}}</td>
                             <td>{{assetref.asset.valve_spec}}</td>
                             <td>{{assetref.asset.size}}</td>

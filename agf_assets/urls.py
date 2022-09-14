@@ -19,5 +19,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    
+    path('', views.Index.as_view(), name='index'),
+    path('asset/<int:id>/', views.AssetPage, name='asset'),
+    path('search', views.Search, name='search'),
+    path('create', views.Create, name='create'),
 ]
+

@@ -85,14 +85,23 @@ class LineContent (models.Model):
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
 
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+
 class LineRating (models.Model):
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
     
 class AssetType (models.Model):
     category=models.ForeignKey(AssetCategory, on_delete=models.RESTRICT, related_name='category_types')
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
     
 class Asset (models.Model):
     INSERVICE = 1
