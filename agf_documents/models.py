@@ -14,6 +14,10 @@ class DocumentType (models.Model):
     def __str__(self):
         return f"{self.name} ({self.code})"
 
+    @property
+    def name_code(self):
+        return f"{self.name} ({self.code})"
+
 class DocumentSubType (models.Model):
     name=models.CharField(max_length=255)
     type=models.ForeignKey(DocumentType, on_delete=models.RESTRICT, related_name='sub_types')
@@ -32,20 +36,9 @@ class Document (models.Model):
     name=models.CharField(max_length=255)
     legacy_no=models.CharField(max_length=255, null=True, blank=True)
 
-    def __str__(self):
-        document_no = f"{self.area.code}-{self.type.code}-"
-        n = self.sequential_no
-        if(n > 999):
-            document_no += str(n)
-        elif(n > 99):
-            document_no += "0" + str(n)
-        elif(n > 9):
-            document_no += "00" + str(n)
-        else:
-            document_no += "000" + str(n)
+    
 
-        return document_no
-
+    @property
     def document_no(self):
         document_no = f"{self.area.code}-{self.type.code}-"
         n = self.sequential_no
@@ -68,6 +61,10 @@ class Document (models.Model):
                 document_no += f"-0{self.sheet}"
 
         return document_no
+
+    @property
+    def area_code(self):
+        return self.area.code
 
     def name_with_legacy(self):
         document_no = f"{self.area.code}-{self.type.code}-"
@@ -107,6 +104,9 @@ class Document (models.Model):
             return "-"
         else:
             return self.legacy_no
+
+    def __str__(self):
+        return self.document_no
 
 class DocumentRevision (models.Model):
     DRAFT = 1
@@ -149,6 +149,9 @@ class DocumentRevision (models.Model):
     revision=models.CharField(max_length=10, null=True, blank=True)
     reason=models.PositiveSmallIntegerField(choices=REASON,null=True, blank=True)
     status=models.PositiveSmallIntegerField(choices=STATUS)
+    
+    def __str__(self):
+        return f"{self.document}_{self.revision}"
 
     def my_revision_display(self):
         if self.revision is None:

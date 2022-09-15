@@ -64,6 +64,37 @@ class PetroleumLicence(models.Model):
         related_name='petroleum_licenses'
     )
 
+    def __str__(self):
+        return f"{self.permit_type} {self.number}"
+
+    @property
+    def permit_type(self):
+        if self.type == self.ATP:
+            return "ATP"
+        elif self.type == self.PL:
+            return "PL"
+        elif self.type == self.PPL:
+            return "PPL"
+        elif self.type == self.PFL:
+            return "PFL"
+        elif self.type == self.PCA:
+            return "PCA"
+        else:
+            return "ERROR"
+
+    @property
+    def type_display(self):
+        permit_type = self.get_type_display()
+        return permit_type
+
+    @property
+    def id_with_space(self):
+        return f"{self.permit_type} {self.number}"
+    
+    @property
+    def id_without_space(self):
+        return f"{self.permit_type}{self.number}"
+
 class ReplacementPL(models.Model):
     permit=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='replacement_PL')
     replacement=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='previous_PL')
@@ -142,6 +173,10 @@ class Asset (models.Model):
             return "-"
         else:
             return f"{self.legacy_no}"
+
+    @property
+    def area_code(self):
+        return self.area.code
     
 class AssetParent(models.Model):
     asset=models.OneToOneField(Asset, on_delete=models.RESTRICT, related_name='parent')

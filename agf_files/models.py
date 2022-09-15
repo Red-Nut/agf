@@ -17,6 +17,11 @@ class File (models.Model):
     def __str__(self):
         return f"{self.name}.{self.ext}"
 
+    @property
+    def name_ext(self):
+        return f"{self.name}.{self.ext}"
+
+    @property
     def link(self):
         return f"{self.location}{self.name}.{self.ext}"
 
@@ -27,7 +32,7 @@ class File (models.Model):
         return f"{settings.MEDIA_URL}{location}{self.name}.{self.ext}"
 
 class FileMeta(models.Model):
-    file=models.ForeignKey(File, on_delete=models.CASCADE, related_name='file_metadata')
+    file=models.OneToOneField(File, on_delete=models.CASCADE, related_name='file_metadata')
     created=models.DateTimeField(default=datetime.now)
     modified=models.DateTimeField(default=datetime.now)
     size=models.IntegerField(null=True, blank=True)
@@ -44,7 +49,7 @@ class Image (models.Model):
     ph = models.IntegerField(null=True, blank=True)
 
 class AssetImage (models.Model):
-    image=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='image_assets')
+    image=models.ForeignKey(Image, on_delete=models.RESTRICT, related_name='image_assets')
     asset=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='asset_images')
     display=models.BooleanField(default=False) # Is this the main display picture of the asset
     nameplate=models.BooleanField(default=False) # Is this the nameplate picture

@@ -23,7 +23,7 @@ class Index(TemplateView):
         context['data'] = json.dumps(
             [
                 {
-                    'id': obj.id,
+                    'id': obj.document.id,
                     'revision': obj.my_revision_display(),
                     'status': obj.get_status_display(),
                     'reason': obj.my_reason_display(),
