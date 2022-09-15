@@ -127,6 +127,7 @@ Document: {{document.document_no}}
                         <tr><th colspan="5"><h4><b>Equipment</b></h4></th></tr>
                         <tr>
                             <th>Asset Number</th>
+                            <th>Name</th>
                             <th>Type</th>
                             <th>Name</th>
                             <th>Status</th>
@@ -136,6 +137,7 @@ Document: {{document.document_no}}
                         {% if assetref.asset.type.category.name == "Equipment" %}
                         <tr class="link" onclick="window.location.href='/assets/asset/{{assetref.asset.id}}/'">
                             <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.name}}</td>
                             <td>{{assetref.asset.type.name}}</td>
                             <td>{{assetref.asset.name}}</td>
                             <td>{{assetref.asset.get_status_display}}</td>
