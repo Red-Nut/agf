@@ -133,6 +133,7 @@ Name
                         <tr><th colspan="5"><h4><b>Equipment</b></h4></th></tr>
                         <tr>
                             <th>Asset Number</th>
+                            <th>Name</th>
                             <th>Type</th>
                             <th>Name</th>
                             <th>Status</th>
@@ -142,6 +143,7 @@ Name
                         {% if assetref.asset.type.category.name == "Equipment" %}
                         <tr>
                             <td>{{assetref.asset.get_asset_no}}</td>
+                            <td>{{assetref.asset.name}}</td>
                             <td>{{assetref.asset.type.name}}</td>
                             <td>{{assetref.asset.name}}</td>
                             <td>{{assetref.asset.get_status_display}}</td>
