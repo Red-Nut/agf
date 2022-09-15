@@ -12,7 +12,7 @@ from .models import *
 from agf_assets.models import *
 
 class Index(TemplateView):
-    template_name="agf_assets/tree.html"
+    template_name="agf_documents/dashboard.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,7 +30,7 @@ class Index(TemplateView):
                     'area': obj.document.area.code,
                     'type': obj.document.type.code,
                     'sub_type': obj.document.my_sub_type_name_display(),
-                    'document_no': obj.document.document_no(),
+                    'document_no': obj.document.document_no,
                     'name': obj.document.name,
                     'legacy_no': obj.document.my_legacy_no_display(),
                     'link': obj.my_link(),
