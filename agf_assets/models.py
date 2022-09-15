@@ -143,8 +143,8 @@ class Asset (models.Model):
         else:
             return f"{self.legacy_no}"
     
-class AssetHierachy (models.Model):
-    asset=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='parent')
+class AssetParent(models.Model):
+    asset=models.OneToOneField(Asset, on_delete=models.RESTRICT, related_name='parent')
     parent=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='children')
 
 class AssetDocumentReference (models.Model):

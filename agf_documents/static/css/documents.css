@@ -55,7 +55,7 @@ body {
 /* main body of page - excludes the navigation bar */
 #main-body {
     margin: 12px;
-    margin-top: 120px;
+    margin-top: 80px;
     max-width: 100%;
 }
 

@@ -39,6 +39,19 @@ class Index(TemplateView):
 
         return context
 
+def AssetTree(request):
+    areas = Area.objects.order_by("code").all()
+
+    parentlessAssets = Asset.objects.filter(parent__isnull=True).all()
+    parentlessAssets = parentlessAssets.exclude(type__category__name="Line").all()
+    parentlessAssets = parentlessAssets.order_by("area__code").all()
+
+    context = {
+        'parentlessAssets' : parentlessAssets,
+    }
+
+    return render(request, "agf_assets/tree.html", context)
+
 def AssetPage(request, id):
     asset = Asset.objects.get(id=id)
 

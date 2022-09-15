@@ -55,7 +55,7 @@ body {
 /* main body of page - excludes the navigation bar */
 #main-body {
     margin: 12px;
-    margin-top: 120px;
+    margin-top: 80px;
     max-width: 100%;
 }
 
@@ -163,4 +163,52 @@ a:hover{
 .attachment-table td{
     padding: 4px;
     border: lightgrey solid 1px;
+}
+
+
+
+/* Asset Tree */
+.tree-area {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0;
+}
+.tree1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+}
+.tree2 {
+    font-size: 1.2em;
+    margin: 0;
+    margin-left:20px;
+}
+.tree3 {
+    font-size: 1em;
+    margin: 0;
+    margin-left:40px;
+}
+.tree4 {
+    font-size: 1em;
+    margin: 0;
+    color: darkgray;
+    margin-left:60px;
+}
+.tree5 {
+    font-size: 1em;
+    margin: 0;
+    color: darkgray;
+    margin-left:80px;
+}
+.tree6 {
+    font-size: 1em;
+    margin: 0;
+    color: darkgray;
+    margin-left:100px;
+}
+.tree7 {
+    font-size: 1em;
+    margin: 0;
+    color: darkgray;
+    margin-left:120px;
 }

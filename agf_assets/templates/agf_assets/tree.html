@@ -1,4 +1,4 @@
-{% extends 'agf_documents/base.html' %}
+{% extends 'agf_assets/base.html' %}
 {% block title %}
 Asset Tree
 {% endblock %}
@@ -8,124 +8,95 @@ Asset Tree
 
 {% block main %}
 <div class="container-fluid">
-
-    
-
-
-    <!-- Show Asset Tree -->
-    <div style="display: none" id="jsonData" data-json="{{ data }}"></div>
-    <div class="container-fluid" id="myTables">
-
-        
+    <div class="row">
+        <div class="col-4">
+            <!-- Level 1 -->
+            {% for asset1 in parentlessAssets %}
+            {% ifchanged asset1.area %}
+            <p class="tree-area">{{asset1.area}}</p>
+            {% endifchanged %}
+            <p class="tree1">
+                {% if asset1.children.all.count != 0 %}
+                <i id="{{asset1.id}}-plus" class="fas fa-plus" onclick="expand('{{asset1.id}}')"></i>
+                <i id="{{asset1.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{asset1.id}}')" style="display:none;"></i>
+                {% endif %}
+                {{asset1}}
+            </p>
+                <!-- Level 2 -->
+                {% for child2 in asset1.children.all %}
+                <p class="tree2 {{asset1.id}}" style="display:none;">
+                    {% if child2.asset.children.all.count != 0 %}
+                    <i id="{{child2.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child2.asset.id}}')"></i>
+                    <i id="{{child2.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child2.asset.id}}')" style="display:none;"></i>
+                    {% else %}
+                    ---
+                    {% endif %}
+                    {{child2.asset}}
+                </p>
+                    <!-- Level 3 -->
+                    {% for child3 in child2.asset.children.all %}
+                    <p class="tree3 {{child2.asset.id}}" style="display:none;">
+                        {% if child3.asset.children.all.count != 0 %}
+                        <i id="{{child3.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child3.asset.id}}')"></i>
+                        <i id="{{child3.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child3.asset.id}}')" style="display:none;"></i>
+                        {% else %}
+                        ---
+                        {% endif %}
+                        {{child3.asset}}
+                    </p>
+                        <!-- Level 4 -->
+                        {% for child4 in child3.asset.children.all %}
+                        <p class="tree4 {{child3.asset.id}}" style="display:none;">
+                            {% if child4.asset.children.all.count != 0 %}
+                            <i id="{{child4.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child4.asset.id}}')"></i>
+                            <i id="{{child4.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child4.asset.id}}')" style="display:none;"></i>
+                            {% else %}
+                            ---
+                            {% endif %}
+                            {{child4.asset}}
+                        </p>
+                            <!-- Level 5 -->
+                            {% for child5 in child4.asset.children.all %}
+                            <p class="tree5 {{child4.asset.id}}" style="display:none;">
+                                {% if child5.asset.children.all.count != 0 %}
+                                <i id="{{child5.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child5.asset.id}}')"></i>
+                                <i id="{{child5.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child5.asset.id}}')" style="display:none;"></i>
+                                {% else %}
+                                ---
+                                {% endif %}
+                                {{child5.asset}}
+                            </p>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-    
- 
 </div>
 
 <script>
-    window.onload = function () {
-        var jsonData = loadJson('#jsonData');
-
-        var id = jsonData.map((item) => item.id);
-        var revision = jsonData.map((item) => item.revision);
-        var status = jsonData.map((item) => item.status);
-        var reason = jsonData.map((item) => item.reason);
-        var area = jsonData.map((item) => item.area);
-        var type = jsonData.map((item) => item.type);
-        var sub_type = jsonData.map((item) => item.sub_type);
-        var document_no = jsonData.map((item) => item.document_no);
-        var name = jsonData.map((item) => item.name);
-        var legacy_no = jsonData.map((item) => item.legacy_no);
-        var link = jsonData.map((item) => item.link);
-
-        tablehead = ""
-        tablehead += '    <thead class="thead-dark">';
-        tablehead += '        <tr>';
-        tablehead += '            <th>Document</th>';
-        tablehead += '            <th style="text-align: center;">Rev</th>';
-        tablehead += '            <th>Name</th>';
-        tablehead += '            <th style="text-align: center;">Issue Reason</th>';
-        tablehead += '            <th style="text-align: center;">Legacy Number</th>';
-        tablehead += '            <th style="text-align: center;">Open</th>';
-        tablehead += '            <th style="text-align: center;">Download</th>';
-        tablehead += '        </tr>';
-        tablehead += '    </thead>';
-
-        htmlallareas = ""
-        htmlareas = ""
-
-        ac = area[0]
-        tc = type[0]
-
-        for(i=0; i < document_no.length; i++){
-            pac = ac
-            ptc = tc
-            ac = area[i]
-            tc = type[i]
-
-            if(i==0){
-                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
-                htmlareas += tablehead;
-
-                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
-                htmlallareas += tablehead;
-
-            } else if (ptc != tc) {
-                htmlareas += '</table>'
-                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
-                htmlareas += tablehead;
-
-                htmlallareas += '</table>'
-                htmlallareas += '<table id="table-' + tc +'" class="table table-striped" style="display:none">';
-                htmlallareas += tablehead;
-
-            } else if (pac != ac){
-                htmlareas += '</table>'
-                htmlareas += '<table id="table-' + ac + '-' + tc +'" class="table table-striped" style="display:none">';
-                htmlareas += tablehead;
-            }
-
-            htmlbody = "";
-            htmlbody += '<tr class="link" onclick="window.location.href=' + "'/documents/document/"+ id[i] + "/'" + '">';
-            htmlbody += '    <td>' + document_no[i] + '</td>';
-            htmlbody += '    <td style="text-align: center;">' + revision[i] + '</td>';
-            htmlbody += '    <td>' + name[i] + '</td>';
-            htmlbody += '    <td style="text-align: center;">' + reason[i] + '</td>';
-            htmlbody += '    <td style="text-align: center;">' + legacy_no[i] + '</td>';
-            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" target="_blank"><i class="fas fa-file"></i></a></td>';
-            htmlbody += '    <td class="link" style="text-align: center;"><a href="' + link[i] + '" download><i class="fas fa-file-download"></i></a></td>';
-
-            htmlbody += '</tr>';
-
-            htmlareas += htmlbody;
-            htmlallareas += htmlbody;
-            
+    function expand(id){
+        elements = document.getElementsByClassName(id);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "block";
         }
-        htmlareas += '</table>';
-        htmlallareas += '</table>';
 
-        html = htmlareas + htmlallareas;
-        document.getElementById("myTables").innerHTML = html;
+        plus = document.getElementById(id+"-plus");
+        plus.style.display = "none";
+        caret = document.getElementById(id+"-caret");
+        caret.style.display = "inline-block";
     }
-
-    function loadJson(selector) {
-        return JSON.parse(document.querySelector(selector).getAttribute('data-json'));
-    }
-
-    
-
-    function hideAllTables(){
-        var elements = document.querySelectorAll("[id^='table']");
-        for(let i = 0; i < elements.length; i++){
-            elements[i].style.display = 'none';
+    function collapse(id){
+        elements = document.getElementsByClassName(id);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "none";
         }
-    }
 
-    function displayTable(id){
-        hideAllTables()
-
-        element = document.getElementById(id)
-        element.style.display = 'table';
+        plus = document.getElementById(id+"-plus");
+        plus.style.display = "inline-block";
+        caret = document.getElementById(id+"-caret");
+        caret.style.display = "none";
     }
 </script>
 
