@@ -9,12 +9,43 @@ def QuestionnairePage(request, id):
 
     if request.method != "POST":
         questionnaire = Questionnaire.objects.get(id=id)
-        questions = Question.objects.filter(questionnaire=questionnaire).order_by('order').all()
+        questionObjects = Question.objects.filter(questionnaire=questionnaire).order_by('order').all()
+
+        incompleteQuestions = []
+        i = 0
+        for question in questionObjects:
+            i += 1
+            answers = []
+            for answer in question.answers.all():
+                answerObj = {
+                    "obj" : answer,
+                    "correct" : None,
+                    "checked" : False,
+                }
+                answers.append(answerObj)
+
+            marked = {
+                "number" : i,
+                "obj" : question,
+                "answers" : answers,
+                "correct" : None,
+            }
+
+            incompleteQuestions.append(marked)   
+
 
         context = {
-            'new' : True,
             'questionnaire' : questionnaire,
-            'questions' : questions,
+            'incompleteQuestions' : incompleteQuestions,
+            'completeQuestions' : None,
+            "correctCount" : None,
+            "questionCount" : None,
+            "percentage" : None,
+            "pass" : None,
+            'name' : "",
+            'email' : "",
+            'showIncorrect' : False,
+            'showCorrect' : False,
         }
 
         return render(request, "agf_hse/questionnaire.html", context)
@@ -31,7 +62,8 @@ def QuestionnairePage(request, id):
             emailList.append(user.user.email)
 
 
-        questions = []
+        compelteQuestions = []
+        incompleteQuestions = []
         questionCount = 0
         qCorrect = 0
 
@@ -178,11 +210,15 @@ def QuestionnairePage(request, id):
                 
 
             marked = {
+                "number" : i,
                 "obj" : question,
                 "answers" : answers,
                 "correct" : correct,
             }
-            questions.append(marked)    
+            if correct:
+                compelteQuestions.append(marked)   
+            else:
+                incompleteQuestions.append(marked)   
 
             emailBody += "</table>"  
             
@@ -207,14 +243,28 @@ def QuestionnairePage(request, id):
         email.content_subtype = 'html' # this is required because there is no plain text email message
         email.send(fail_silently=False)
 
+        showIncorrect = False
+        if len(incompleteQuestions)>0:
+            if percentage < 100:
+                showIncorrect = True
+
+        showCorrect = False
+        if len(compelteQuestions)>0:
+            if percentage < 100:
+                showCorrect = True
+
         context = {
-            "new" : False,
             "questionnaire" : questionnaire,
-            "questions" : questions,
+            "incompleteQuestions" : incompleteQuestions,
+            "completeQuestions" : compelteQuestions,
             "correctCount" : qCorrect,
             "questionCount" : questionCount,
             "percentage" : percentage,
             "pass" : success,
+            "name" : request.POST["name"],
+            "email" : request.POST["email"],
+            'showIncorrect' : showIncorrect,
+            'showCorrect' : showCorrect,
         }
 
         return render(request, "agf_hse/questionnaire.html", context)

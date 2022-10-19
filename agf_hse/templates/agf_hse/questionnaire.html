@@ -10,18 +10,18 @@
 <div class="container-fluid">
     <h2>Australian Gasfields: {{questionnaire.name}}</h2>
 
-    <form name=questionnaire action="{% url 'questionnaire_complete' %}" method="POST">
+    <form name=questionnaire action="{% url 'induction' id=questionnaire.id %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="questionnaireID" value="{{questionnaire.id}}">
 
-        <br>
+        <!--- Name and Email -->
         <table>
             <tr>
                 <td class="pe-3">
                     <label for="name">Name</label>
                 </td>
                 <td>
-                    <input type="text" name="name" id="name" required>
+                    <input type="text" name="name" id="name" value="{{name}}" autocomplete="name" required>
                 </td>
             </tr>
             <tr>
@@ -29,30 +29,159 @@
                     <label for="email">Email Address</label></td>
                 </td>
                 <td>
-                    <input type="email" name="email" id="email" required>
+                    <input type="email" name="email" id="email" value="{{email}}" required>
                 </td>
             </tr>
         </table>
         <br>
 
-        {% for question in questions %}
+        <!--- Score -->
+        {% if pass != None %}
+        <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
+            {% if pass %}
+            <i class="c-base">Test Passed</i>
+            {% else %}
+            <i class="c-error">Test Failed</i>
+            {% endif %}
+        </p>
+        {% endif %}
+
+        <!--- Incomplete Questions -->
+        {% if pass is not None %}
+        {% if showIncorrect %}
+        <h3>Incorrect Questions</h3>
+        {% endif %}
+        {% endif %}
+        {% for question in incompleteQuestions %}
         <div class="card" id="question{{question.id}}">
             <div class="card-body">
-                <h4 class="card-title"><b>Question {{forloop.counter}}</b> <small>({{question.get_type_display}})</small></h4>
-                <p class="card-text">{{question.question}}</p>
-                {% for answer in question.answers.all %}
-                <input
-                    {% if question.type == question.MULTI %} 
-                    onclick="deselectOthers('a{{answer.id}}','q{{question.id}}')"
+                <h4 class="card-title">
+                    {% if question.correct is not none %}
+                    {% if question.correct %}
+                    <i class="fas fa-check c-base"></i>
+                    {% else %}
+                    <i class="fas fa-times-circle c-error" ></i>
                     {% endif %}
-                type="checkbox" class="q{{question.id}}" id="a{{answer.id}}" name="answer{{answer.id}}" value="checked">
-                <label for="answer{{answer.id}}">{{answer.answer}}</label><br>
+                    {% endif %}
+                    <b>Question {{question.number}}</b>
+                    <small>({{question.obj.get_type_display}})</small>
+                </h4>
+                <p class="card-text">{{question.obj.question}}</p>
+                {% for answer in question.answers %}
+                    {% if pass == None %}
+                        <input
+                            {% if question.obj.type == question.obj.MULTI %} 
+                            onclick="deselectOthers('a{{answer.obj.id}}','q{{question.obj.id}}')"
+                            {% endif %}
+                        type="checkbox" class="q{{question.obj.id}}" id="a{{answer.obj.id}}" name="answer{{answer.obj.id}}" value="checked">
+                    {% else %}
+                        {% if question.obj.type == question.obj.MULTI %}
+                            {% if answer.checked and not answer.correct %}
+                                <i class="fas fa-times-circle c-error" ></i>
+                            {% else %}
+                                <input 
+                                    onclick="deselectOthers('a{{answer.obj.id}}','q{{question.obj.id}}')"
+                                    type="checkbox" 
+                                    class="q{{question.obj.id}}" 
+                                    id="a{{answer.obj.id}}" 
+                                    name="answer{{answer.obj.id}}" 
+                                    value="checked"
+                                >
+                            {% endif %}
+                        {% else %}
+                            {% if answer.checked and not answer.correct %}
+                                <i class="fas fa-times-circle c-error" ></i>
+                            {% else %}
+                                <input 
+                                    type="checkbox" 
+                                    class="q{{question.obj.id}}" 
+                                    id="a{{answer.obj.id}}" 
+                                    name="answer{{answer.obj.id}}" 
+                                    value="checked"
+                                    {% if answer.checked %}
+                                    checked
+                                    {% endif %}
+                                >
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    <label for="answer{{answer.obj.id}}">{{answer.obj.answer}}</label><br>
                 {% endfor %}
             </div>
         </div>
         {% endfor %}
+
+        <!--- Submit Button -->
+        {% if pass == None %}
+        <button class="btn btn-primary" onclick="checkForm()">Submit</button>
+        {% else %}
+            {% if showIncorrect %}
+            <button class="btn btn-primary" onclick="checkForm()">Resubmit</button>
+            {% endif %}
+        {% endif %}
+        <br>
+        <br>
+
+        <!--- Complete Questions -->
+    {% if questionnaire.show_marking %}
+    {% if showCorrect %}
+    <h3>Correct Questions</h3>
+    {% endif %}
+    {% for question in completeQuestions %}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">
+                {% if question.correct %}
+                <i class="fas fa-check c-base"></i>
+                {% else %}
+                <i class="fas fa-times-circle c-error" ></i>
+                {% endif %}
+                <b>Question {{question.number}}</b>
+                <small>({{question.obj.get_type_display}})</small>
+            </h4>
+            <p class="card-text">{{question.obj.question}}</p>
+            <table>
+            {% for answer in question.answers %}
+                <tr>
+                    <td>
+                        <input 
+                            style="display:none;"
+                            type="checkbox" 
+                            class="q{{question.obj.id}}" 
+                            id="a{{answer.obj.id}}" 
+                            name="answer{{answer.obj.id}}" 
+                            value="checked"
+                            {% if answer.checked %}
+                            checked
+                            {% endif %}
+                        >
+                        {% if answer.correct and not answer.checked %}
+                        <i class="far fa-square"></i>
+                        {% endif %}
+                        {% if not answer.correct and not answer.checked %}
+                        <i class="far fa-square"></i>
+                        {% endif %}
+                        {% if answer.correct and answer.checked %}
+                        <i class="fas fa-check c-base"></i>
+                        {% endif %}
+                        {% if not answer.correct and answer.checked %}
+                        <i class="fas fa-times-circle c-error" ></i>
+                        {% endif %}
+                    </td>
+                    <td class="ps-2">
+                        {{answer.obj.answer}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
     </form>
-    <button class="btn btn-primary" onclick="checkForm()">Submit</button>
+
 </div>
 
 <script>
