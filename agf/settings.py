@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'agf_documents',
     'agf_assets',
     'agf_files',
+    'agf_hse',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,138 @@
+{% extends 'agf_hse/base.html' %}
+{% block title %}
+{{questionnaire.name}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %} 
+<div class="container-fluid">
+    <h2>Australian Gasfields: {{questionnaire.name}}</h2>
+
+    <form name=questionnaire action="{% url 'questionnaire_complete' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="questionnaireID" value="{{questionnaire.id}}">
+
+        <br>
+        <table>
+            <tr>
+                <td class="pe-3">
+                    <label for="name">Name</label>
+                </td>
+                <td>
+                    <input type="text" name="name" id="name" required>
+                </td>
+            </tr>
+            <tr>
+                <td class="pe-3">
+                    <label for="email">Email Address</label></td>
+                </td>
+                <td>
+                    <input type="email" name="email" id="email" required>
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        {% for question in questions %}
+        <div class="card" id="question{{question.id}}">
+            <div class="card-body">
+                <h4 class="card-title"><b>Question {{forloop.counter}}</b> <small>({{question.get_type_display}})</small></h4>
+                <p class="card-text">{{question.question}}</p>
+                {% for answer in question.answers.all %}
+                <input
+                    {% if question.type == question.MULTI %} 
+                    onclick="deselectOthers('a{{answer.id}}','q{{question.id}}')"
+                    {% endif %}
+                type="checkbox" class="q{{question.id}}" id="a{{answer.id}}" name="answer{{answer.id}}" value="checked">
+                <label for="answer{{answer.id}}">{{answer.answer}}</label><br>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+    <button class="btn btn-primary" onclick="checkForm()">Submit</button>
+</div>
+
+<script>
+    function deselectOthers(id,others){
+        myEl = document.getElementById(id);
+
+        allEl = document.getElementsByClassName(others);
+
+        for (var i=0, el; el = allEl[i]; i++) {
+            if (el != myEl) {
+                el.checked = false;
+            }
+        }
+    }
+
+    function checkForm(){
+        myForm = document.questionnaire;
+        yOffset = -100; 
+
+        nameEl = document.getElementById("name");
+        emailEl = document.getElementById("email");
+
+        if (nameEl.value == ""){
+            y = nameEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            alert("Please enter your name.");
+            window.scrollTo({top: y, behavior: 'smooth'});
+
+            return
+        }
+        
+        if (emailEl.value == ""){
+            y = emailEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            alert("Please enter your email address.");
+            window.scrollTo({top: y, behavior: 'smooth'});
+            
+            return
+        } else {
+            if(validateEmail(emailEl.value) == false){
+                y = emailEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+                alert("Please enter a valid email address.");
+                window.scrollTo({top: y, behavior: 'smooth'});
+
+                return
+            }
+        }
+
+        {% for question in questions %}
+        {% if question.type == 1 or question.type == 2 %}
+        allEl = document.getElementsByClassName("q{{question.id}}");
+
+        isChecked = false
+
+        for (var i=0, el; el = allEl[i]; i++) {
+            if (el.checked == true) {
+                isChecked = true;
+            }
+        }
+
+        if (isChecked == false){
+            element = document.getElementById("question{{question.id}}");
+            y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            alert("Question {{forloop.counter}} Incomplete: {{question.question}}");
+            window.scrollTo({top: y, behavior: 'smooth'});
+
+            return
+        }
+        {% endif %}
+        {% endfor %}
+
+        
+        myForm.submit();
+    }
+
+    function validateEmail(email) {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+</script>
+{% endblock %}

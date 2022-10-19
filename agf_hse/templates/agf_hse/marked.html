@@ -1,0 +1,67 @@
+{% extends 'agf_hse/base.html' %}
+{% block title %}
+Results: {{questionaire.name}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %} 
+<div class="container-fluid">
+    <h2>Australian Gasfields: {{questionaire.name}} Results</h2>
+    <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
+        {% if pass %}
+        <i class="c-base">Test Passed</i>
+        {% else %}
+        <i class="c-error">Test Failed</i>
+        {% endif %}
+    </p>
+    {% if not pass %}
+    <a class="btn btn-primary" href="{% url 'induction' id=questionaire.id %}">Try Again</a>
+    {% endif %}
+
+    {% if questionnaire.show_marking %}
+    {% for question in questions %}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">
+                {% if question.correct %}
+                <i class="fas fa-check c-base"></i>
+                {% else %}
+                <i class="fas fa-times-circle c-error" ></i>
+                {% endif %}
+                <b>Question {{forloop.counter}}</b>
+                <small>({{question.obj.get_type_display}})</small>
+            </h4>
+            <p class="card-text">{{question.obj.question}}</p>
+            <table>
+            {% for answer in question.answers %}
+                <tr>
+                    <td>
+                        {% if answer.correct and not answer.checked %}
+                        <i class="far fa-square"></i>
+                        {% endif %}
+                        {% if not answer.correct and not answer.checked %}
+                        <i class="far fa-square"></i>
+                        {% endif %}
+                        {% if answer.correct and answer.checked %}
+                        <i class="fas fa-check c-base"></i>
+                        {% endif %}
+                        {% if not answer.correct and answer.checked %}
+                        <i class="fas fa-times-circle c-error" ></i>
+                        {% endif %}
+                    </td>
+                    <td class="ps-2">
+                        {{answer.obj.answer}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+
+{% endblock %}
