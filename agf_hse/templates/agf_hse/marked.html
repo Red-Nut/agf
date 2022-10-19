@@ -17,7 +17,7 @@ Results: {{questionaire.name}}
         {% endif %}
     </p>
     {% if not pass %}
-    <a class="btn btn-primary" href="{% url 'induction' id=questionaire.id %}">Try Again</a>
+    <a class="btn btn-primary" href="{% url 'induction' id=questionnaire.id %}">Try Again</a>
     {% endif %}
 
     {% if questionnaire.show_marking %}

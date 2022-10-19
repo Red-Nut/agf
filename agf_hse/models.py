@@ -20,7 +20,7 @@ class Questionnaire (models.Model):
         return f"{self.name}"
 
 class QuestionaireEmailResult(models.Model):
-    questionnaire=models.ForeignKey(Questionnaire, on_delete=models.CASCADE)
+    questionnaire=models.ForeignKey(Questionnaire, on_delete=models.CASCADE, related_name='emails')
     user=models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Question (models.Model):
