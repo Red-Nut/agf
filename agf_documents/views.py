@@ -134,13 +134,14 @@ def Create(request):
 
 def MissingFiles(request):
     documentFiles = DocumentFile.objects.all()
+    pathList = []
     for rev in documentFiles:
         file = rev.file
 
         path = settings.MEDIA_ROOT + file.location + file.name + "." + file.ext
         print(path)
 
-        pathList = []
+        
         if not exists(path):
             pathList.append(path)
 
