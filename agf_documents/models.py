@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
 # Other module imports
-from agf_assets.models import *
+#from agf_assets.models import *
 
 # Document Type
 class DocumentType (models.Model):
@@ -27,7 +27,7 @@ class DocumentSubType (models.Model):
 
 # Document
 class Document (models.Model):
-    area=models.ForeignKey(Area, on_delete=models.RESTRICT, related_name='area_documents')
+    area=models.ForeignKey('agf_assets.Area', on_delete=models.RESTRICT, related_name='area_documents')
     type=models.ForeignKey(DocumentType, on_delete=models.RESTRICT, related_name='type_documents')
     sub_type=models.ForeignKey(DocumentSubType, null=True, blank=True, on_delete=models.RESTRICT, related_name='sub_type_documents')
     sequential_no=models.IntegerField()
