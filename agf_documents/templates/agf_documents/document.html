@@ -20,7 +20,7 @@ Document: {{document.document_no}}
                         </tr>
                         {% if document.legacy_no is not None %}
                         <tr>
-                            <th>Type</th>
+                            <th>Legacy Number</th>
                             <td>{{document.legacy_no}}</td>
                         </tr>
                         {% endif %}
@@ -41,10 +41,6 @@ Document: {{document.document_no}}
                         <tr>
                             <th>Area</th>
                             <td>{{document.area}}</td>
-                        </tr>
-                        <tr>
-                            <th>Type</th>
-                            <td>{{document.type}}</td>
                         </tr>
                     </table>
                 </div>

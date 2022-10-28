@@ -19,8 +19,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.Index.as_view(), name='documents'),
+    path('', views.IndexLogin.as_view(), name='documents'),
     path('document/<int:id>/', views.DocumentPage, name='document'),
-    path('search', views.Search, name='search'),
-    path('create', views.Create, name='create'),
+    path('search', views.Search, name='document_search'),
+    path('create', views.Create, name='document_create'),
+    
+    path('missing_files', views.MissingFiles), 
 ]

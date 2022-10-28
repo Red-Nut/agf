@@ -8,6 +8,156 @@ Documents - Dashboard
 
 {% block main %}
 <div class="container-fluid">
+    <form action="{% url 'document_create' %}" method="POST">
+        {% csrf_token %}
+        <!--<table>
+            {{ form.as_table }}
+        </table>-->
 
+        <br><br>
+
+        <table>
+            <tr>
+                <th>
+                    <label for="id_area">Area:</label>
+                </th>
+                <td>
+                    <select name="area" required="" id="id_area">
+                        <option value="" selected="">---------</option>
+                        {% for area in areas %}
+                        <option value="{{area.id}}">{{area.code}}: {{area.name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr><td><br></td></tr>
+            
+            <tr>
+                <th>
+                    Document <input type="radio" onclick="DocumentOrDrawing('document')" id="document" value="document">
+                </th>
+                <th>
+                    Drawing <input type="radio" onclick="DocumentOrDrawing('drawing')" id="drawing" value="drawing">
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_type">Type:</label>
+                </th>
+                <td>
+                    <select name="type" required="" id="id_type" onchange="TypeSelection()" required>
+                    </select>
+                </td>
+            </tr>
+            <tr id="subTypeRow" style="display:none;">
+                <th><label for="id_sub_type">Sub-Type:</label></th>
+                <td>
+                    <select name="sub_type" id="id_sub_type">
+                        <option value="" selected="">---------</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr><td><br></td></tr>
+
+            <tr>
+                <th><label for="id_name">Document Name:</label></th>
+                <td>
+                    <input type="text" name="name" maxlength="255" required="" id="id_name">
+                </td>
+            </tr>
+            <tr>
+                <th><label for="id_legacy_no">Legacy Number:</label></th>
+                <td>
+                    <input type="text" name="legacy_no" maxlength="255" id="id_legacy_no" placeholder="If required">
+                </td>
+            </tr>
+            <tr id="sheetsRow" style="display:none;">
+                <th>
+                    <label for="id_sheets">Sheets:</label>
+                </th>
+                <td>
+                    <input type="number" name="sheets" id="id_sheets" placeholder="If required">
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
 </div>
+
+<script>
+    var document = -1
+    docEl = document.getElementById("document")
+    drawEl = document.getElementById("drawing")
+
+    typeSelectionEl = document.getElementById("id_type")
+
+    subTypeSelectionEl = document.getElementById("id_sub_type")
+    subTypeRowEl = document.getElementById("subTypeRow")
+
+    sheetsSelectionEl = document.getElementById("id_sheets")
+    sheetsRowEl = document.getElementById("sheetsRow")
+
+    function DocumentOrDrawing(switchTo){
+        if (switchTo == "document"){
+            if (document != 1) {
+                document = 1;
+                docEl.checked = true;
+                drawEl.checked = false;
+
+                typeSelectionEl.options.length=0;
+                typeSelectionEl.options.add(new Option("---------", ""))
+                
+                {% for type in types %}
+                {% if not type.drawing %}
+                typeSelectionEl.options.add(new Option("{{type.code}}: {{type.name}}", "{{type.id}}"))
+                {% endif %}
+                {% endfor %}
+
+                sheetsRowEl.style.display = "none"
+                sheetsSelectionEl.value=""
+            }
+        }
+        if (switchTo == "drawing"){
+            if (document != 0) {
+                document = 0;
+                docEl.checked = false;
+                drawEl.checked = true;
+
+                typeSelectionEl.options.length=0;
+                typeSelectionEl.options.add(new Option("---------", ""))
+                
+                {% for type in types %}
+                {% if type.drawing %}
+                typeSelectionEl.options.add(new Option("{{type.code}}: {{type.name}}", "{{type.id}}"))
+                {% endif %}
+                {% endfor %}
+
+                sheetsRowEl.style.display = "table-row"
+            }
+        }
+    }
+
+    function TypeSelection(){
+        subTypeSelectionEl.options.length=0;
+        subTypeSelectionEl.options.add(new Option("---------", ""))
+
+        count = 0
+
+        {% for sub_type in sub_types %}
+        if({{sub_type.type.id}} == typeSelectionEl.value){
+            count += 1
+            subTypeSelectionEl.options.add(new Option("{{sub_type.name}}", "{{sub_type.id}}"))
+        }
+        {% endfor %}
+
+        if(count > 0){
+            subTypeRowEl.style.display = "table-row"
+        } else {
+            subTypeRowEl.style.display = "none"
+        }
+    }
+</script>
 {% endblock %}
