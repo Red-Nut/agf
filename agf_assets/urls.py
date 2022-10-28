@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('', views.AssetTree, name='asset_tree'),
     path('asset/<int:id>/', views.AssetPage, name='asset'),
-    path('search', views.Search, name='search'),
-    path('create', views.Create, name='create'),
+    path('search', views.Search, name='asset_search'),
+    path('create', views.Create, name='asset_create'),
 ]
 
