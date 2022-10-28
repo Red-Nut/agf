@@ -8,6 +8,10 @@ Document: {{document.document_no}}
 
 {% block main %}
 <div class="container-fluid">
+    {{ formset.errors }}
+    {{ formset.non_field_errors }}
+    {{ form.errors }}
+    {{ form.non_field_errors }}
     <h1>{{document.document_no}}</h1>
     <div class="row">
         <div class="col-xl-4">
@@ -69,8 +73,75 @@ Document: {{document.document_no}}
                         </tr>
                         {% endfor %}
                     </table>
+                    <button class="btn btn-primary" onclick="newRevision()">New Revision</button>
+
+                    <div class="card mt-4" id="newRevision" style="display:none;">
+                        <div class="card-body">
+                            <form action="{% url 'document' id=document.id %}" enctype="multipart/form-data" method="POST">
+                                {% csrf_token %}
+                                <!--<table>
+                                    {{ form.as_table }}
+                                </table>-->
+        
+                                <table>
+                                    <tr style="display:none;">
+                                        <th>
+                                            <label for="id_document">Document:</label>
+                                        </th>
+                                        <td>
+                                            <select name="document" required="" id="id_document">
+                                            <option value="{{document.id}}"selected="">{{document.name}}</option>
+                                        </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label for="id_revision">Revision Number:</label>
+                                        </th>
+                                        <td>
+                                            <input type="text" name="revision" maxlength="10" id="id_revision">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label for="id_reason">Reason:</label>
+                                        </th>
+                                        <td>
+                                            <select name="reason" required="" id="id_reason">
+                                                <option value="" selected="">---------</option>
+                                                {% for reason in document.revisions.first.REASON %}
+                                                <option value="{{reason.0}}">{{reason.1}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label for="id_status">Status:</label>
+                                        </th>
+                                        <td>
+                                            <select name="status" required="" id="id_status">
+                                                <option value="" selected="">---------</option>
+                                                {% for status in document.revisions.first.STATUS %}
+                                                <option value="{{status.0}}">{{status.1}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label for="id_file">File:</label></th>
+                                        <td>
+                                          <input type="file" name="file" required="" id="id_file">
+                                        </td>
+                                      </tr>
+                                </table>
+                                <input class="btn btn-primary" type="submit" value="Submit">
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
             <!-- Reference Documents -->
             <div class="card">
                 <div class="card-body">
@@ -230,5 +301,9 @@ Document: {{document.document_no}}
     </div>
 </div>
 
-
+<script>
+    function newRevision(){
+        document.getElementById("newRevision").style.display = "flex";
+    }
+</script>
 {% endblock %}

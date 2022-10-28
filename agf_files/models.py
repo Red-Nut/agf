@@ -40,7 +40,7 @@ class FileMeta(models.Model):
     modified_by=models.ForeignKey(User, on_delete=models.RESTRICT, related_name='modified_files')
 
 class DocumentFile (models.Model):
-    document_revision=models.ForeignKey(DocumentRevision, on_delete=models.RESTRICT, related_name='document_files')
+    document_revision=models.ForeignKey(DocumentRevision, on_delete=models.CASCADE, related_name='document_files')
     file=models.ForeignKey(File, on_delete=models.RESTRICT, related_name='file_document')
 
 class Image (models.Model):

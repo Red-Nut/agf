@@ -12,11 +12,11 @@ from .forms import *
 # Other module imports
 from agf_assets.models import *
 from agf_documents.models import DocumentRevision, DocumentSubType
-from agf_files.models import DocumentFile
+from agf_files.models import File, FileMeta, DocumentFile
 
 # 3rd Party
 import json
-from os.path import exists, join
+import os
 
 class Index(TemplateView):
     template_name="agf_documents/dashboard.html"
@@ -54,20 +54,105 @@ class IndexLogin(LoginRequiredMixin, Index):
 
 @login_required
 def DocumentPage(request, id):
-    document = Document.objects.get(id=id)
+    if request.method != "POST":
+        document = Document.objects.get(id=id)
 
-    documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
+        documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
 
-    documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
-    if documentFile is None:
-        documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
+        documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
+        if documentFile is None:
+            documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
 
-    context = {
-        'document' : document,
-        'documentFile' : documentFile,
-    }
+        form = CreateRevision()
 
-    return render(request, "agf_documents/document.html", context)
+        context = {
+            'document' : document,
+            'documentFile' : documentFile,
+            "form" : form,
+        }
+
+        return render(request, "agf_documents/document.html", context)
+    else:
+        form = CreateRevision(request.POST, request.FILES)
+        print("here1")
+        if form.is_valid():
+            print("here2")
+            document = Document.objects.get(id=int(form.data['document']))
+            revision = form.data['revision']
+            reason = int(form.data['reason'])
+            status = int(form.data['status'])
+
+            documentRevision = DocumentRevision.objects.create(
+                document = document,
+                revision = revision,
+                reason = reason,
+                status=status
+            )
+            print("here3")
+
+            handle_uploaded_file(request.FILES['file'], documentRevision, request.user)
+
+        document = Document.objects.get(id=id)
+
+        documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
+
+        documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
+        if documentFile is None:
+            documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
+
+        #form = CreateRevision()
+
+        context = {
+            'document' : document,
+            'documentFile' : documentFile,
+            "form" : form,
+        }
+
+        return render(request, "agf_documents/document.html", context)
+
+def handle_uploaded_file(f, rev, user):
+    ext = os.path.splitext(f.name)[1][1:]
+    name = os.path.splitext(f.name)[0]
+    id = f"{rev.id:07}"
+    storedLocation='\\files\\' + id + '\\'
+
+    location = storedLocation.replace('\\', '/')
+    if location[0] == '/':
+        location = location[1:]
+
+    if location[-1] == '/':
+        location = location[:-1]
+
+    folder = os.path.join(settings.MEDIA_ROOT, location)
+    if not os.path.isdir(folder):
+        os.mkdir(folder)
+
+    path = os.path.join(settings.MEDIA_ROOT, location, f.name)
+
+
+    with open(path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+    size = os.path.getsize(path)
+
+    file = File.objects.create(
+        location=storedLocation,
+        ext=ext,
+        name=name
+    )
+
+    fileMeta = FileMeta.objects.create(
+        file=file,
+        size=size,
+        created_by=user,
+        modified_by=user
+    )
+
+    documentFile = DocumentFile.objects.create(
+        document_revision = rev,
+        file = file
+    )
 
 @login_required
 def Search(request):
@@ -75,7 +160,6 @@ def Search(request):
 
 @login_required
 def Create(request):
-    pass
     if request.method != "POST":
         form = CreateDocument()
         areas = Area.objects.order_by("code").all()
@@ -111,14 +195,14 @@ def Create(request):
             if sheets != "":
                 for i in range(int(sheets)):
                     document = Document.objects.create(
-                    area = area,
-                    type = type,
-                    sub_type = sub_type,
-                    name=name,
-                    legacy_no = legacy_no,
-                    sequential_no = nextNum,
-                    sheet = i+1
-                )
+                        area = area,
+                        type = type,
+                        sub_type = sub_type,
+                        name=name,
+                        legacy_no = legacy_no,
+                        sequential_no = nextNum,
+                        sheet = i+1
+                    )
             else:
                 document = Document.objects.create(
                     area = area,
@@ -146,11 +230,9 @@ def MissingFiles(request):
         if location[-1] == '/':
             location = location[:-1]
 
-        path = join(settings.MEDIA_ROOT, location, file.name + "." + file.ext)
-        print(path)
+        path = os.path.join(settings.MEDIA_ROOT, location, file.name + "." + file.ext)
 
-        
-        if not exists(path):
+        if not os.path.exists(path):
             pathList.append(path)
 
         response = {

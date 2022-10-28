@@ -40,25 +40,13 @@ class Document (models.Model):
 
     @property
     def document_no(self):
-        document_no = f"{self.area.code}-{self.type.code}-"
-        n = self.sequential_no
-        if(n > 999):
-            document_no += str(n)
-        elif(n > 99):
-            document_no += "0" + str(n)
-        elif(n > 9):
-            document_no += "00" + str(n)
-        else:
-            document_no += "000" + str(n)
+        document_no = f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
 
         if self.suffix is not None:
             document_no += "-" + self.suffix
         
         if self.sheet is not None:
-            if(self.sheet > 9):
-                document_no += f"-{self.sheet}"
-            else:
-                document_no += f"-0{self.sheet}"
+            document_no += f"-{self.sheet:02}"
 
         return document_no
 
@@ -67,27 +55,14 @@ class Document (models.Model):
         return self.area.code
 
     def name_with_legacy(self):
-        document_no = f"{self.area.code}-{self.type.code}-"
-        n = self.sequential_no
-        if(n > 999):
-            document_no += str(n)
-        elif(n > 99):
-            document_no += "0" + str(n)
-        elif(n > 9):
-            document_no += "00" + str(n)
-        else:
-            document_no += "000" + str(n)
+        document_no = f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
 
         if self.suffix is not None:
             document_no += "-" + self.suffix
 
         if self.sheet is not None:
-            if(self.sheet > 9):
-                document_no += f"-{self.sheet}"
-            else:
-                document_no += f"-0{self.sheet}"
+            document_no += f"-{self.sheet:02}"
             
-
         if self.legacy_no is None:
             return document_no
         else:
