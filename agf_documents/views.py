@@ -16,7 +16,7 @@ from agf_files.models import DocumentFile
 
 # 3rd Party
 import json
-from os.path import exists
+from os.path import exists, join
 
 class Index(TemplateView):
     template_name="agf_documents/dashboard.html"
@@ -138,7 +138,15 @@ def MissingFiles(request):
     for rev in documentFiles:
         file = rev.file
 
-        path = settings.MEDIA_ROOT + file.location + file.name + "." + file.ext
+        location = file.location
+        location = location.replace('\\', '/')
+        if location[0] == '/':
+            location = location[1:]
+
+        if location[-1] == '/':
+            location = location[:-1]
+
+        path = join(settings.MEDIA_ROOT, location, file.name + "." + file.ext)
         print(path)
 
         
