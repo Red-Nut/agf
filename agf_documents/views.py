@@ -148,8 +148,8 @@ def MissingFiles(request):
             "paths" : pathList
         }
         
-        json_resonse = json.dumps(response)
-        return HttpResponse(json_resonse)
+    json_resonse = json.dumps(response)
+    return HttpResponse(json_resonse)
 
         
 
