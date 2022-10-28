@@ -6,7 +6,7 @@ from django.conf import settings
 
 # Other module imports
 from agf_documents.models import *
-#from agf_assets.models import *
+from agf_assets.models import *
 
 # Files
 class File (models.Model):
@@ -40,7 +40,7 @@ class FileMeta(models.Model):
     modified_by=models.ForeignKey(User, on_delete=models.RESTRICT, related_name='modified_files')
 
 class DocumentFile (models.Model):
-    document_revision=models.ForeignKey('agf_assets.DocumentRevision', on_delete=models.RESTRICT, related_name='document_files')
+    document_revision=models.ForeignKey(DocumentRevision, on_delete=models.RESTRICT, related_name='document_files')
     file=models.ForeignKey(File, on_delete=models.RESTRICT, related_name='file_document')
 
 class Image (models.Model):
@@ -50,6 +50,6 @@ class Image (models.Model):
 
 class AssetImage (models.Model):
     image=models.ForeignKey(Image, on_delete=models.RESTRICT, related_name='image_assets')
-    asset=models.ForeignKey('agf_assets.Asset', on_delete=models.RESTRICT, related_name='asset_images')
+    asset=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='asset_images')
     display=models.BooleanField(default=False) # Is this the main display picture of the asset
     nameplate=models.BooleanField(default=False) # Is this the nameplate picture

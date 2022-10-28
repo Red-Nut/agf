@@ -3,6 +3,8 @@ from django import forms
 
 from .models import *
 
+from agf_assets.models import *
+
 class CreateDocument(forms.Form):
     area = forms.ModelChoiceField(label='Area', queryset=Area.objects.all())
     type = forms.ModelChoiceField(label='Document Type', queryset=DocumentType.objects.all())
