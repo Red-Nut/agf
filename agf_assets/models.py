@@ -103,7 +103,7 @@ class ReplacementPL(models.Model):
 class Area (models.Model):
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
-    permit=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='areas')
+    permit=models.ForeignKey(PetroleumLicence, null=True, blank=True, on_delete=models.RESTRICT, related_name='areas')
 
     def __str__(self):
         return f"{self.name} ({self.code})"

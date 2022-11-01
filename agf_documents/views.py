@@ -77,9 +77,7 @@ def DocumentPage(request, id):
         return render(request, "agf_documents/document.html", context)
     else:
         form = CreateRevision(request.POST, request.FILES)
-        print("here1")
         if form.is_valid():
-            print("here2")
             document = Document.objects.get(id=int(form.data['document']))
             revision = form.data['revision']
             reason = int(form.data['reason'])
@@ -91,7 +89,6 @@ def DocumentPage(request, id):
                 reason = reason,
                 status=status
             )
-            print("here3")
 
             HandleUploadedFile(request.FILES['file'], documentRevision, request.user)
 
@@ -150,7 +147,10 @@ def Create(request):
                 legacy_no = None
 
             latestDocument = Document.objects.filter(area=area, type=type).order_by("-sequential_no").first()
-            nextNum = latestDocument.sequential_no + 1
+            if latestDocument != None:
+                nextNum = latestDocument.sequential_no + 1
+            else:
+                nextNum = 1
 
             sheets = form.data['sheets']
             if sheets != "":
