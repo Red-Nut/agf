@@ -93,11 +93,13 @@ class DocumentRevision (models.Model):
     IFI = 7
     IFU = 8
     IFH = 9
+    IFComment = 10
     ASBUILD = 99
 
     REASON = (
         (DRAFT, _('Draft')),
         (IFI, _('Issue for Information')),
+        (IFComment, _('Issue for Comment')),
         (IFR, _('Issue for Review')),
         (IFH, _('Issue for HAZOP')),
         (IFQ, _('Issue for Quotation')),
