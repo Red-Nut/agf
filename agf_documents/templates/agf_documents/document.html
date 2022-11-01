@@ -178,8 +178,12 @@ Document: {{document.document_no}}
             <!-- Preview -->
             <div class="card mb-0" style="height:100%;">
                 <div class="card-body">
+                    {% if documentFile %}
                     <p class="link" style="text-align:right; position: absolute; right: 30px; top:30px;"><i class="fas fa-expand-arrows-alt fa-2x"></i></p>
                     <iframe src="{{documentFile.file.url}}#toolbar=0&navpanes=0" width="100%" height="100%"></iframe>
+                    {% else %}
+                        <p>No file available for preview</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

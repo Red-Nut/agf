@@ -1,4 +1,15 @@
 from django.shortcuts import render
+from django.conf import settings
+
+# This module imports
+from .models import *
+
+# Other module imports
+
+# Third party imports
+import os
+
+
 
 # Create your views here.
 def HandleUploadedFile(f, rev, user):
