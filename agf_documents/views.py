@@ -13,6 +13,7 @@ from .forms import *
 from agf_assets.models import *
 from agf_documents.models import DocumentRevision, DocumentSubType
 from agf_files.models import File, FileMeta, DocumentFile
+from agf_files.views import HandleUploadedFile
 
 # 3rd Party
 import json
@@ -69,6 +70,8 @@ def DocumentPage(request, id):
             'document' : document,
             'documentFile' : documentFile,
             "form" : form,
+            "reasons" : DocumentRevision.REASON,
+            "statuses" : DocumentRevision.STATUS,
         }
 
         return render(request, "agf_documents/document.html", context)
@@ -90,7 +93,7 @@ def DocumentPage(request, id):
             )
             print("here3")
 
-            handle_uploaded_file(request.FILES['file'], documentRevision, request.user)
+            HandleUploadedFile(request.FILES['file'], documentRevision, request.user)
 
         document = Document.objects.get(id=id)
 
@@ -110,49 +113,7 @@ def DocumentPage(request, id):
 
         return render(request, "agf_documents/document.html", context)
 
-def handle_uploaded_file(f, rev, user):
-    ext = os.path.splitext(f.name)[1][1:]
-    name = os.path.splitext(f.name)[0]
-    id = f"{rev.id:07}"
-    storedLocation='\\files\\' + id + '\\'
 
-    location = storedLocation.replace('\\', '/')
-    if location[0] == '/':
-        location = location[1:]
-
-    if location[-1] == '/':
-        location = location[:-1]
-
-    folder = os.path.join(settings.MEDIA_ROOT, location)
-    if not os.path.isdir(folder):
-        os.mkdir(folder)
-
-    path = os.path.join(settings.MEDIA_ROOT, location, f.name)
-
-
-    with open(path, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-    size = os.path.getsize(path)
-
-    file = File.objects.create(
-        location=storedLocation,
-        ext=ext,
-        name=name
-    )
-
-    fileMeta = FileMeta.objects.create(
-        file=file,
-        size=size,
-        created_by=user,
-        modified_by=user
-    )
-
-    documentFile = DocumentFile.objects.create(
-        document_revision = rev,
-        file = file
-    )
 
 @login_required
 def Search(request):

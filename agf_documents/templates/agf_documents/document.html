@@ -109,7 +109,7 @@ Document: {{document.document_no}}
                                         <td>
                                             <select name="reason" required="" id="id_reason">
                                                 <option value="" selected="">---------</option>
-                                                {% for reason in document.revisions.first.REASON %}
+                                                {% for reason in reasons %}
                                                 <option value="{{reason.0}}">{{reason.1}}</option>
                                                 {% endfor %}
                                             </select>
@@ -122,7 +122,7 @@ Document: {{document.document_no}}
                                         <td>
                                             <select name="status" required="" id="id_status">
                                                 <option value="" selected="">---------</option>
-                                                {% for status in document.revisions.first.STATUS %}
+                                                {% for status in statuses %}
                                                 <option value="{{status.0}}">{{status.1}}</option>
                                                 {% endfor %}
                                             </select>
