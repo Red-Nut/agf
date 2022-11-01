@@ -19,10 +19,21 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Document Dashboard
     path('', views.IndexLogin.as_view(), name='documents'),
+
+    # Document Page
     path('document/<int:id>/', views.DocumentPage, name='document'),
+    path('document_new_revision/<int:id>/', views.NewDocumentRevision, name='document_new_revision'),
+    path('document_new_reference/<int:id>/', views.NewDocumentReference, name='document_new_reference'),
+
+    # Document Search
     path('search', views.Search, name='document_search'),
+
+    # Create new Document
     path('create', views.Create, name='document_create'),
     
+
+    # Admin Functions
     path('missing_files', views.MissingFiles), 
 ]

@@ -19,3 +19,8 @@ class CreateRevision(forms.Form):
     reason = forms.IntegerField(label='Reason', required=False)
     status = forms.IntegerField(label='Status')
     file = forms.FileField()
+
+class CreateDocumentReference(forms.Form):
+    document = forms.ModelChoiceField(label='Document', queryset=Document.objects.all())
+    reference = forms.ModelChoiceField(label='Reference Document', queryset=Document.objects.all())
+    

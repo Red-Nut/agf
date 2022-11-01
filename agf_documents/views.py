@@ -55,27 +55,32 @@ class IndexLogin(LoginRequiredMixin, Index):
 
 @login_required
 def DocumentPage(request, id):
-    if request.method != "POST":
-        document = Document.objects.get(id=id)
+    document = Document.objects.get(id=id)
+    documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
 
-        documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
+    documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
+    if documentFile is None:
+        documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
 
-        documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
-        if documentFile is None:
-            documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
+    documents = Document.objects.order_by("area__code", "type__code", "sequential_no").all()
+    areas = Area.objects.order_by("code").all()
+    types = DocumentType.objects.order_by("code").all()
 
-        form = CreateRevision()
+    context = {
+        'document' : document,
+        'documentFile' : documentFile,
+        'reasons' : DocumentRevision.REASON,
+        'statuses' : DocumentRevision.STATUS,
+        'documents' : documents,
+        'areas' : areas,
+        'types' : types,
+    }
 
-        context = {
-            'document' : document,
-            'documentFile' : documentFile,
-            "form" : form,
-            "reasons" : DocumentRevision.REASON,
-            "statuses" : DocumentRevision.STATUS,
-        }
+    return render(request, "agf_documents/document.html", context)
 
-        return render(request, "agf_documents/document.html", context)
-    else:
+@login_required
+def NewDocumentRevision(request,id):
+    if request.method == "POST":
         form = CreateRevision(request.POST, request.FILES)
         if form.is_valid():
             document = Document.objects.get(id=int(form.data['document']))
@@ -90,27 +95,24 @@ def DocumentPage(request, id):
                 status=status
             )
 
-            HandleUploadedFile(request.FILES['file'], documentRevision, request.user)
+            HandleUploadedFile(request.FILES['file'], documentRevision, request.user)    
 
-        document = Document.objects.get(id=id)
+    return redirect(reverse('document', kwargs={'id':id}))
 
-        documentRevision = DocumentRevision.objects.filter(document=document, status=DocumentRevision.CURRENT).first()
+@login_required
+def NewDocumentReference(request,id):
+    if request.method == "POST":
+        form = CreateDocumentReference(request.POST, request.FILES)
+        if form.is_valid():
+            document = Document.objects.get(id=int(form.data['document']))
+            reference = Document.objects.get(id=int(form.data['reference']))
 
-        documentFile = DocumentFile.objects.filter(document_revision=documentRevision, file__ext="pdf").first()
-        if documentFile is None:
-            documentFile = DocumentFile.objects.filter(document_revision=documentRevision).first()
+            documentReference = DocumentReference.objects.create(
+                document = document,
+                reference_document = reference,
+            )  
 
-        #form = CreateRevision()
-
-        context = {
-            'document' : document,
-            'documentFile' : documentFile,
-            "form" : form,
-        }
-
-        return render(request, "agf_documents/document.html", context)
-
-
+    return redirect(reverse('document', kwargs={'id':id}))
 
 @login_required
 def Search(request):
