@@ -201,11 +201,13 @@ Document: {{document.document_no}}
                                     <tr><td><br></td></tr>
 
                                     <tr>
-                                        <th>
+                                        <th colspan="2">
                                             <label for="id_reference">Reference Document:</label>
                                         </th>
-                                        <td>
-                                            <select name="reference" required="" id="id_reference">
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <select name="reference" required="" id="id_reference"  style="width:100%; text-overflow: ellipsis;">
                                                 <option value="" selected="">---------</option>
                                                 {% for d in documents %}
                                                 <option value="{{d.id}}">{{d.document_no}}: {{d.name}}</option>
