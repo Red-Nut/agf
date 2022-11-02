@@ -208,7 +208,7 @@ Document: {{document.document_no}}
                                             <select name="reference" required="" id="id_reference">
                                                 <option value="" selected="">---------</option>
                                                 {% for d in documents %}
-                                                <option value="{{d.id}}">{{d.document_no}}</option>
+                                                <option value="{{d.id}}">{{d.document_no}}: {{d.name}}</option>
                                                 {% endfor %}
                                         </select>
                                         </td>
@@ -387,7 +387,7 @@ Document: {{document.document_no}}
         {% for d in documents %}
             if({{d.area.id}} == areaFilter.value || areaFilter.value == "" ){
                 if({{d.type.id}} == typeFilter.value || typeFilter.value == "" ){
-                    docSelectionEl.options.add(new Option("{{d.document_no}}", "{{d.id}}"))
+                    docSelectionEl.options.add(new Option("{{d.document_no}}: {{d.name}}", "{{d.id}}"))
                 }
             }
         {% endfor %}
