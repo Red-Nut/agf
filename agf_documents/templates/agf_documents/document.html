@@ -148,7 +148,7 @@ Document: {{document.document_no}}
                             <th>Name</th>
                         </tr>
                         {% for ref in document.reference_documents.all %}
-                        <tr>
+                        <tr class="link" onclick="window.location.href='{% url 'document' id=ref.reference_document.id %}'">
                             <td>{{ref.reference_document.document_no}}</td>
                             <td>{{ref.reference_document.name}}</td>
                         </tr>
@@ -387,7 +387,7 @@ Document: {{document.document_no}}
         {% for d in documents %}
             if({{d.area.id}} == areaFilter.value || areaFilter.value == "" ){
                 if({{d.type.id}} == typeFilter.value || typeFilter.value == "" ){
-                    docSelectionEl.options.add(new Option("{{d.document_no}}", "{{d.id}"))
+                    docSelectionEl.options.add(new Option("{{d.document_no}}", "{{d.id}}"))
                 }
             }
         {% endfor %}
