@@ -116,7 +116,65 @@ def NewDocumentReference(request,id):
 
 @login_required
 def Search(request):
-    pass
+    form = SearchDocument()
+    area = None
+    type = None
+    sub_type = None
+    name = None
+    legacy_no = None
+    documents = None
+
+    if request.method == "POST":
+        form = SearchDocument(request.POST)
+        if form.is_valid():
+            documents = Document.objects.all()
+
+            if form.data['area'] != "":
+                area = Area.objects.get(id=int(form.data['area']))
+                if area is not None:
+                    documents = documents.filter(area=area).all()
+
+            if form.data['type'] != "":
+                type = DocumentType.objects.get(id=int(form.data['type']))
+                if type is not None:
+                    documents = documents.filter(type=type).all()             
+
+            if form.data['sub_type'] != "":
+                sub_type = DocumentSubType.objects.get(id=int(form.data['sub_type']))
+                if sub_type is not None:
+                    documents = documents.filter(sub_type=sub_type).all()
+                
+            name = form.data['name']
+            if name == "":
+                name = None
+            if name is not None:
+                documents = documents.filter(name__icontains=name).all()
+
+            legacy_no = form.data['legacy_no']
+            if legacy_no == "":
+                legacy_no = None
+            if legacy_no is not None:
+                documents = documents.filter(legacy_no__icontains=legacy_no).all()
+
+            
+            
+    areas = Area.objects.order_by("code").all()
+    types = DocumentType.objects.order_by("code").all()
+    sub_types = DocumentSubType.objects.order_by("name").all()
+
+    context = {
+        "form" : form,
+        "areas" : areas,
+        "types" : types,
+        "sub_types" : sub_types,
+        "area_selected" : area,
+        "type_selected" : type,
+        "sub_type_selected" : sub_type,
+        "name" : name,
+        "legacy_no" : legacy_no,
+        "documents" : documents,
+    }
+    return render(request, "agf_documents/search.html", context)
 
 @login_required
 def Create(request):

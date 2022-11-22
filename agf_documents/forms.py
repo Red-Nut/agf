@@ -24,3 +24,8 @@ class CreateDocumentReference(forms.Form):
     document = forms.ModelChoiceField(label='Document', queryset=Document.objects.all())
     reference = forms.ModelChoiceField(label='Reference Document', queryset=Document.objects.all())
     
+class SearchDocument(forms.Form):
+    name = forms.CharField(label='Document Name',max_length=255, required=False)
+    area = forms.ModelChoiceField(label='Area', queryset=Area.objects.all(), required=False)
+    type = forms.ModelChoiceField(label='Document Type', queryset=DocumentType.objects.all(), required=False)
+    sub_type = forms.ModelChoiceField(label='Document Sub-Type', queryset=DocumentSubType.objects.all(), required=False)

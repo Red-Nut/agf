@@ -10,10 +10,230 @@ Document Search
 <br>
 <br>
 <div class="container-fluid">
-    <div class="row">
-       
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'document_search' %}" method="POST">
+                {% csrf_token %}
+                <!--<table>
+                    {{ form.as_table }}
+                </table>-->
+                <table>
+                    <tr>
+                        <th>
+                            <label for="id_area">Area:</label>
+                        </th>
+                        <td>
+                            <select name="area" id="id_area">
+                                <option value="" selected="">---------</option>
+                                {% for area in areas %}
+                                <option
+                                    value="{{area.id}}"
+                                    {% if area.id == area_selected.id %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{area.code}}: {{area.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+        
+                    <tr><td><br></td></tr>
+                    
+                    <tr>
+                        <th>
+                            Document
+                            <input 
+                                type="radio" 
+                                onclick="DocumentOrDrawing('document')" 
+                                id="document" 
+                                value="document"
+                                {% if type_selected %}
+                                {% if not type_selected.drawing %}
+                                checked
+                                {% endif %}
+                                {% endif %}
+                            >
+                        </th>
+                        <th>
+                            Drawing
+                            <input 
+                                type="radio" 
+                                onclick="DocumentOrDrawing('drawing')" 
+                                id="drawing" 
+                                value="drawing"
+                                {% if type_selected.drawing %}
+                                checked
+                                {% endif %}
+                            >
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="id_type">Type:</label>
+                        </th>
+                        <td>
+                            <select name="type" id="id_type" onchange="TypeSelection()">
+                                {% if type_selected %}
+                                    <option value="">---------</option>
+                                    {% for type in types %}
+                                    {% if type.drawing == type_selected.drawing %}
+                                    <option value="{{type.id}}"
+                                        {% if type_selected.id == type.id %}
+                                        selected=""
+                                        {% endif %}
+                                    >
+                                        {{type.code}}: {{type.name}}
+                                    </option>
+                                    typeSelectionEl.options.add(new Option("", ""))
+                                    {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="" selected="">---------</option>
+                                {% endif %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr 
+                        id="subTypeRow" 
+                        style="display:none;"
+                    >
+                        <th><label for="id_sub_type">Sub-Type:</label></th>
+                        <td>
+                            <select name="sub_type" id="id_sub_type">
+                                <option value="" selected="">---------</option>
+                            </select>
+                        </td>
+                    </tr>
+        
+                    <tr><td><br></td></tr>
+        
+                    <tr>
+                        <th><label for="id_name">Document Name:</label></th>
+                        <td>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                maxlength="255" 
+                                id="id_name"
+                                {% if name %}
+                                value = "{{name}}"
+                                {% endif %}
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="id_legacy_no">Legacy Number:</label></th>
+                        <td>
+                            <input 
+                                type="text" 
+                                name="legacy_no" 
+                                maxlength="255" 
+                                id="id_legacy_no" 
+                                placeholder="If required"
+                                {% if legacy_no %}
+                                value = "{{legacy_no}}"
+                                {% endif %}
+                            >
+                        </td>
+                    </tr>
+                    
+                </table>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Document</th>
+                        <th>Name</th>
+                        <th style="text-align: center;">Legacy Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                    <tr class="link" onclick="window.location.href='{% url 'document' document.id %}'">
+                        <td>{{document.document_no}}</td>
+                        <td>{{document.name}}</td>
+                        <td style="text-align: center;">{{document.legacy_no}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+<script>
+    var document = -1
+    docEl = document.getElementById("document")
+    drawEl = document.getElementById("drawing")
+
+    typeSelectionEl = document.getElementById("id_type")
+
+    subTypeSelectionEl = document.getElementById("id_sub_type")
+    subTypeRowEl = document.getElementById("subTypeRow")
+
+    function DocumentOrDrawing(switchTo){
+        if (switchTo == "document"){
+            if (document != 1) {
+                document = 1;
+                docEl.checked = true;
+                drawEl.checked = false;
+
+                typeSelectionEl.options.length=0;
+                typeSelectionEl.options.add(new Option("---------", ""))
+                
+                {% for type in types %}
+                {% if not type.drawing %}
+                typeSelectionEl.options.add(new Option("{{type.code}}: {{type.name}}", "{{type.id}}"))
+                {% endif %}
+                {% endfor %}
+            }
+        }
+        if (switchTo == "drawing"){
+            if (document != 0) {
+                document = 0;
+                docEl.checked = false;
+                drawEl.checked = true;
+
+                typeSelectionEl.options.length=0;
+                typeSelectionEl.options.add(new Option("---------", ""))
+                
+                {% for type in types %}
+                {% if type.drawing %}
+                typeSelectionEl.options.add(new Option("{{type.code}}: {{type.name}}", "{{type.id}}"))
+                {% endif %}
+                {% endfor %}
+            }
+        }
+    }
+
+    function TypeSelection(){
+        subTypeSelectionEl.options.length=0;
+        subTypeSelectionEl.options.add(new Option("---------", ""))
+
+        count = 0
+
+        {% for sub_type in sub_types %}
+        if({{sub_type.type.id}} == typeSelectionEl.value){
+            count += 1
+            subTypeSelectionEl.options.add(new Option("{{sub_type.name}}", "{{sub_type.id}}"))
+        }
+        {% endfor %}
+
+        if(count > 0){
+            subTypeRowEl.style.display = "table-row"
+        } else {
+            subTypeRowEl.style.display = "none"
+        }
+    }
+</script>
 
 {% endblock %}
