@@ -1,6 +1,6 @@
 {% extends 'agf_documents/base.html' %}
 {% block title %}
-Documents - Dashboard
+New Document
 {% endblock %}
 
 {% block header %}
@@ -8,82 +8,87 @@ Documents - Dashboard
 
 {% block main %}
 <div class="container-fluid">
-    <form action="{% url 'document_create' %}" method="POST">
-        {% csrf_token %}
-        <!--<table>
-            {{ form.as_table }}
-            <br><br>
-        </table>-->
-
-        <table>
-            <tr>
-                <th>
-                    <label for="id_area">Area:</label>
-                </th>
-                <td>
-                    <select name="area" required="" id="id_area">
-                        <option value="" selected="">---------</option>
-                        {% for area in areas %}
-                        <option value="{{area.id}}">{{area.code}}: {{area.name}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr><td><br></td></tr>
-            
-            <tr>
-                <th>
-                    Document <input type="radio" onclick="DocumentOrDrawing('document')" id="document" value="document">
-                </th>
-                <th>
-                    Drawing <input type="radio" onclick="DocumentOrDrawing('drawing')" id="drawing" value="drawing">
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    <label for="id_type">Type:</label>
-                </th>
-                <td>
-                    <select name="type" required="" id="id_type" onchange="TypeSelection()" required>
-                    </select>
-                </td>
-            </tr>
-            <tr id="subTypeRow" style="display:none;">
-                <th><label for="id_sub_type">Sub-Type:</label></th>
-                <td>
-                    <select name="sub_type" id="id_sub_type">
-                        <option value="" selected="">---------</option>
-                    </select>
-                </td>
-            </tr>
-
-            <tr><td><br></td></tr>
-
-            <tr>
-                <th><label for="id_name">Document Name:</label></th>
-                <td>
-                    <input type="text" name="name" maxlength="255" required="" id="id_name">
-                </td>
-            </tr>
-            <tr>
-                <th><label for="id_legacy_no">Legacy Number:</label></th>
-                <td>
-                    <input type="text" name="legacy_no" maxlength="255" id="id_legacy_no" placeholder="If required">
-                </td>
-            </tr>
-            <tr id="sheetsRow" style="display:none;">
-                <th>
-                    <label for="id_sheets">Sheets:</label>
-                </th>
-                <td>
-                    <input type="number" name="sheets" id="id_sheets" placeholder="If required">
-                </td>
-            </tr>
-        </table>
-        <br>
-        <input class="btn btn-primary" type="submit" value="Submit">
-    </form>
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'document_create' %}" method="POST">
+                {% csrf_token %}
+                <!--<table>
+                    {{ form.as_table }}
+                    <br><br>
+                </table>-->
+        
+                <table>
+                    <tr>
+                        <th>
+                            <label for="id_area">Area:</label>
+                        </th>
+                        <td>
+                            <select name="area" required="" id="id_area">
+                                <option value="" selected="">---------</option>
+                                {% for area in areas %}
+                                <option value="{{area.id}}">{{area.code}}: {{area.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+        
+                    <tr><td><br></td></tr>
+                    
+                    <tr>
+                        <th>
+                            Document <input type="radio" onclick="DocumentOrDrawing('document')" id="document" value="document">
+                        </th>
+                        <th>
+                            Drawing <input type="radio" onclick="DocumentOrDrawing('drawing')" id="drawing" value="drawing">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="id_type">Type:</label>
+                        </th>
+                        <td>
+                            <select name="type" required="" id="id_type" onchange="TypeSelection()" required>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="subTypeRow" style="display:none;">
+                        <th><label for="id_sub_type">Sub-Type:</label></th>
+                        <td>
+                            <select name="sub_type" id="id_sub_type">
+                                <option value="" selected="">---------</option>
+                            </select>
+                        </td>
+                    </tr>
+        
+                    <tr><td><br></td></tr>
+        
+                    <tr>
+                        <th><label for="id_name">Document Name:</label></th>
+                        <td>
+                            <input type="text" name="name" maxlength="255" required="" id="id_name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="id_legacy_no">Legacy Number:</label></th>
+                        <td>
+                            <input type="text" name="legacy_no" maxlength="255" id="id_legacy_no" placeholder="If required">
+                        </td>
+                    </tr>
+                    <tr id="sheetsRow" style="display:none;">
+                        <th>
+                            <label for="id_sheets">Sheets:</label>
+                        </th>
+                        <td>
+                            <input type="number" name="sheets" id="id_sheets" placeholder="If required">
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+    
 </div>
 
 <script>

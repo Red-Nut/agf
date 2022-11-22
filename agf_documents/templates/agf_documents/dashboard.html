@@ -10,9 +10,9 @@ Documents - Dashboard
 <div class="container-fluid">
 
     <!-- Documents/Drawings Tabs -->
-    <ul class="nav nav-tabs" style="border-top: 1px solid #dee2e6;">
-        <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#documents">Documents</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#drawings">Drawings</a></li>
+    <ul class="nav nav-tabs">
+        <li class="nav-item active"><a class="nav-link myTab active" data-toggle="tab" href="#documents">Documents</a></li>
+        <li class="nav-item"><a class="nav-link myTab" data-toggle="tab" href="#drawings">Drawings</a></li>
     </ul>
 
     <div class="tab-content">
@@ -21,10 +21,10 @@ Documents - Dashboard
 
             <!-- Area Tabs -->
             <ul class="nav nav-tabs">
-                <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#alldocuments">All Areas</a></li>
+                <li class="nav-item active"><a class="nav-link myTab active" data-toggle="tab" href="#alldocuments">All Areas</a></li>
                 
                 {% for area in areas %}
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#doc-area-{{area.code}}">{{area.code}}</a></li>
+                <li class="nav-item"><a class="nav-link myTab" data-toggle="tab" href="#doc-area-{{area.code}}">{{area.code}}</a></li>
                 {% endfor %}
 
             </ul>
@@ -168,12 +168,12 @@ Documents - Dashboard
 
     <!-- Show Documents -->
     <div style="display: none" id="jsonData" data-json="{{ data }}"></div>
-    <div class="container-fluid" id="myTables">
+    <div class="card" style="display: none" id="table-container">
+        <div class="card-body" id="myTables">
 
-        
+        </div>
     </div>
-    
- 
+
 </div>
 
 <script>
@@ -280,6 +280,8 @@ Documents - Dashboard
 
         element = document.getElementById(id)
         element.style.display = 'table';
+
+        document.getElementById("table-container").style.display='block';
     }
 </script>
 

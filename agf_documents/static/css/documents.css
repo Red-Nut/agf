@@ -2,7 +2,10 @@
 :root {
     --base-color:#121645;
     --light-color:#3953a7;
-    --comp-color:#2f9c65;
+    --comp-color:#dbb04d;
+
+    --background-light:#dbb04d;
+    --background-dark:hsl(59, 32%, 22%);
 
     --warning-color:#FEA520;
     --error-color:#C51B29;
@@ -35,7 +38,7 @@
     color: white;
 }
 .c-navbarbackground {
-    background-color: #dbb04d !important;
+    background-color: var(--background-light) !important;
 }
 
 .c-navbutton{
@@ -49,7 +52,7 @@ html,
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif, Verdana, Geneva, Tahoma, sans-serif;
-    background-color: rgb(244, 217, 153);
+    background-color:var(--background-dark);
 }
 
 /* main body of page - excludes the navigation bar */
@@ -85,7 +88,6 @@ a:hover{
 
 /* navbar */
 .navbar{
-    background-color:#212529;
     padding-left: 24px;
     padding-right: 24px;
 }
@@ -93,6 +95,22 @@ a:hover{
     color: var(--base-color) !important;
 }
 
+/* Tabs */
+.nav-tabs{
+    background-color:var(--background-dark);
+    border: none;
+}
+.myTab{
+    background-color:var(--background-dark) !important;
+    color: white !important;
+    border: 1px solid var(--background-light) !important;
+}
+.myTab.active{
+    color: var(--base-color) !important;
+    background-color:var(--background-light) !important;
+    border: 1px solid var(--background-dark) !important;
+    font-weight: bold;
+}
 
 /* Inserting this collapsed row between two flex items will make 
  * the flex item that comes after it break to a new row */
@@ -121,6 +139,7 @@ a:hover{
 .btn-primary:hover{
     background-color: var(--comp-color);
     border-color:var(--base-color);
+    color: var(--base-color);
 }
 
 /* Button as text */

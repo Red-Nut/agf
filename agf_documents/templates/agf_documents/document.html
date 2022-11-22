@@ -12,11 +12,11 @@ Document: {{document.document_no}}
     {{ formset.non_field_errors }}
     {{ form.errors }}
     {{ form.non_field_errors }}
-    <h1>{{document.document_no}}</h1>
     <div class="row">
         <div class="col-xl-4">
             <div class="card">
                 <div class="card-body">
+                    <h1>{{document.document_no}}</h1>
                     <table class="table" style="width: auto;">
                         <tr>
                             <th>Document No.</th>
@@ -253,6 +253,7 @@ Document: {{document.document_no}}
         </div>
     </div>
 
+    {% if document.assets_referred_by.all %}
     <div class="row">
         <div class="col">
             <!-- Equipment -->
@@ -283,6 +284,7 @@ Document: {{document.document_no}}
                     </table>
                 </div>
             </div>
+    
 
             <!-- Instruments -->
             <div class="card">
@@ -367,6 +369,8 @@ Document: {{document.document_no}}
         </div>
         
     </div>
+    {% endif %}
+    
 </div>
 
 <script>
