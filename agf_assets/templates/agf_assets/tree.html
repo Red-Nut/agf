@@ -7,96 +7,231 @@ Asset Tree
 {% endblock %}
 
 {% block main %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-4">
-            <!-- Level 1 -->
-            {% for asset1 in parentlessAssets %}
-            {% ifchanged asset1.area %}
-            <p class="tree-area">{{asset1.area}}</p>
-            {% endifchanged %}
-            <p class="tree1">
-                {% if asset1.children.all.count != 0 %}
-                <i id="{{asset1.id}}-plus" class="fas fa-plus" onclick="expand('{{asset1.id}}')"></i>
-                <i id="{{asset1.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{asset1.id}}')" style="display:none;"></i>
-                {% endif %}
-                {{asset1}}
-            </p>
-                <!-- Level 2 -->
-                {% for child2 in asset1.children.all %}
-                <p class="tree2 {{asset1.id}}" style="display:none;">
-                    {% if child2.asset.children.all.count != 0 %}
-                    <i id="{{child2.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child2.asset.id}}')"></i>
-                    <i id="{{child2.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child2.asset.id}}')" style="display:none;"></i>
+
+<div class="row">
+    <div class="col-4">
+        <div class="card" style="border: none; background-color: var(--background-light);">
+            <div class="card-body p-0">
+                <!-- Level 1 -->
+                {% for asset1 in parentlessAssets %}
+                {% ifchanged asset1.area %}
+                    {% if forloop.counter != 1 %}
+                </div>
+                    </div>
+                    {% endif %}
+                <div class="card m-0" style="border: 4px solid var(--background-light); border-bottom:none;">
+                    <div class="card-body">
+                    <p class="tree-area">{{asset1.area}}</p>
+                {% endifchanged %}
+                <p class="tree1">
+                    {% if asset1.children.all.count != 0 %}
+                    <i id="{{asset1.id}}-plus" class="fas fa-plus link" onclick="expand('{{asset1.id}}')"></i>
+                    <i id="{{asset1.id}}-caret" class="fas fa-caret-down link"  onclick="collapse('{{asset1.id}}')" style="display:none;"></i>
                     {% else %}
                     ---
                     {% endif %}
-                    {{child2.asset}}
+                    <span class="link" onclick="show(
+                        '{{asset1.id}}',
+                        '{{asset1}}',
+                        '{{asset1.get_name}}',
+                        '{{asset1.type}}',
+                        '{{asset1.area}}',
+                        '{{asset1.get_status_display}}',
+                        '{{asset1.legacy_no}}'
+                        )">{{asset1}}</span>
                 </p>
-                    <!-- Level 3 -->
-                    {% for child3 in child2.asset.children.all %}
-                    <p class="tree3 {{child2.asset.id}}" style="display:none;">
-                        {% if child3.asset.children.all.count != 0 %}
-                        <i id="{{child3.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child3.asset.id}}')"></i>
-                        <i id="{{child3.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child3.asset.id}}')" style="display:none;"></i>
+                    <!-- Level 2 -->
+                    {% for child2 in asset1.children.all %}
+                    <p class="tree2 {{asset1.id}}" style="display:none;">
+                        {% if child2.asset.children.all.count != 0 %}
+                        <i id="{{child2.asset.id}}-plus" class="fas fa-plus link c{{asset1.id}}-plus" onclick="expand('{{child2.asset.id}}')"></i>
+                        <i id="{{child2.asset.id}}-caret" class="fas fa-caret-down link c{{asset1.id}}-caret"  onclick="collapse('{{child2.asset.id}}')" style="display:none;"></i>
                         {% else %}
                         ---
                         {% endif %}
-                        {{child3.asset}}
+                        <span class="link" onclick="show(
+                            '{{child2.asset.id}}',
+                            '{{child2.asset}}',
+                            '{{child2.asset.get_name}}',
+                            '{{child2.asset.type}}',
+                            '{{child2.asset.area}}',
+                            '{{child2.asset.get_status_display}}',
+                            '{{child2.asset.legacy_no}}'
+                            )">{{child2.asset}}</span>
                     </p>
-                        <!-- Level 4 -->
-                        {% for child4 in child3.asset.children.all %}
-                        <p class="tree4 {{child3.asset.id}}" style="display:none;">
-                            {% if child4.asset.children.all.count != 0 %}
-                            <i id="{{child4.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child4.asset.id}}')"></i>
-                            <i id="{{child4.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child4.asset.id}}')" style="display:none;"></i>
+                        <!-- Level 3 -->
+                        {% for child3 in child2.asset.children.all %}
+                        <p class="tree3 c{{asset1.id}} {{child2.asset.id}}" style="display:none;">
+                            {% if child3.asset.children.all.count != 0 %}
+                            <i id="{{child3.asset.id}}-plus" class="fas fa-plus link c{{asset1.id}}-plus c{{child2.asset.id}}-plus" onclick="expand('{{child3.asset.id}}')"></i>
+                            <i id="{{child3.asset.id}}-caret" class="fas fa-caret-down link c{{asset1.id}}-caret c{{child2.asset.id}}-caret"  onclick="collapse('{{child3.asset.id}}')" style="display:none;"></i>
                             {% else %}
                             ---
                             {% endif %}
-                            {{child4.asset}}
+                            <span class="link" onclick="show(
+                                '{{child3.asset.id}}',
+                                '{{child3.asset}}',
+                                '{{child3.asset.get_name}}',
+                                '{{child3.asset.type}}',
+                                '{{child3.asset.area}}',
+                                '{{child3.asset.get_status_display}}',
+                                '{{child3.asset.legacy_no}}'
+                                )">{{child3.asset}}</span>
                         </p>
-                            <!-- Level 5 -->
-                            {% for child5 in child4.asset.children.all %}
-                            <p class="tree5 {{child4.asset.id}}" style="display:none;">
-                                {% if child5.asset.children.all.count != 0 %}
-                                <i id="{{child5.asset.id}}-plus" class="fas fa-plus" onclick="expand('{{child5.asset.id}}')"></i>
-                                <i id="{{child5.asset.id}}-caret" class="fas fa-caret-down"  onclick="collapse('{{child5.asset.id}}')" style="display:none;"></i>
+                            <!-- Level 4 -->
+                            {% for child4 in child3.asset.children.all %}
+                            <p class="tree4 c{{asset1.id}} c{{child2.asset.id}} {{child3.asset.id}}" style="display:none;">
+                                {% if child4.asset.children.all.count != 0 %}
+                                <i id="{{child4.asset.id}}-plus" class="fas fa-plus link c{{asset1.id}}-plus c{{child2.asset.id}}-plus c{{child3.asset.id}}-plus" onclick="expand('{{child4.asset.id}}')"></i>
+                                <i id="{{child4.asset.id}}-caret" class="fas fa-caret-down link c{{asset1.id}}-caret c{{child2.asset.id}}-caret c{{child3.asset.id}}-caret"  onclick="collapse('{{child4.asset.id}}')" style="display:none;"></i>
                                 {% else %}
                                 ---
                                 {% endif %}
-                                {{child5.asset}}
+                                <span class="link" onclick="show(
+                                    '{{child4.asset.id}}',
+                                    '{{child4.asset}}',
+                                    '{{child4.asset.get_name}}',
+                                    '{{child4.asset.type}}',
+                                    '{{child4.asset.area}}',
+                                    '{{child4.asset.get_status_display}}',
+                                    '{{child4.asset.legacy_no}}'
+                                    )">{{child4.asset}}</span>
                             </p>
+                                <!-- Level 5 -->
+                                {% for child5 in child4.asset.children.all %}
+                                <p class="tree5 c{{asset1.id}} c{{child2.asset.id}} c{{child3.asset.id}} {{child4.asset.id}}" style="display:none;">
+                                    {% if child5.asset.children.all.count != 0 %}
+                                    <i id="{{child5.asset.id}}-plus" class="fas fa-plus link c{{asset1.id}}-plus c{{child2.asset.id}}-plus c{{child3.asset.id}}-plus c{{child4.asset.id}}-plus" onclick="expand('{{child5.asset.id}}')"></i>
+                                    <i id="{{child5.asset.id}}-caret" class="fas fa-caret-down link c{{asset1.id}}-caret c{{child2.asset.id}}-caret c{{child3.asset.id}}-caret c{{child4.asset.id}}-caret"  onclick="collapse('{{child5.asset.id}}')" style="display:none;"></i>
+                                    {% else %}
+                                    ---
+                                    {% endif %}
+                                    <span class="link" onclick="show(
+                                        '{{child5.asset.id}}',
+                                        '{{child5.asset}}',
+                                        '{{child5.asset.get_name}}',
+                                        '{{child5.asset.type}}',
+                                        '{{child5.asset.area}}',
+                                        '{{child5.asset.get_status_display}}',
+                                        '{{child5.asset.legacy_no}}'
+                                        )">{{child5.asset}}</span>
+                                </p>
+                                {% endfor %}
                             {% endfor %}
                         {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="details" class="col-8" style="display: none;">
+        <div class="card" style="border: 4px solid var(--background-light);">
+            <div class="card-body">
+                <h1 id="title">{{asset.get_asset_no}}</h1>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <td id="name"></td>
+                    </tr>
+                    <tr>
+                        <th>Area</th>
+                        <td id="area"></td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td id="type"></td>
+                    </tr>
+                    <tr>
+                        <th>Asset Number</th>
+                        <td id="asset_no"></td>
+                    </tr>
+                    <tr>
+                        <th>Legacy Number</th>
+                        <td id="legacy_no"></td>
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <th>Status</th>
+                        <td id="status"></td>
+                    </tr>
+                </table>
+                <a id="view" class="btn btn-primary" href="#">View Asset</a>
+                <a id="newTab" class="btn btn-primary" href="#" target="_blank">Open in New Tab</a>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    function show(id, asset_no, name, type, area, status, legacy_no){
+        document.getElementById('title').innerHTML = name + " (" + asset_no +")";
+
+        document.getElementById('asset_no').innerHTML = asset_no;
+        document.getElementById('name').innerHTML = name;
+        document.getElementById('type').innerHTML = type;
+        document.getElementById('area').innerHTML = area;
+        document.getElementById('status').innerHTML = status;
+
+        if (legacy_no == "None"){
+            legacy_no = "-"
+        }
+        document.getElementById('legacy_no').innerHTML = legacy_no;
+
+        document.getElementById('view').href = "/assets/asset/" + id;
+        document.getElementById('newTab').href = "/assets/asset/" + id;
+
+
+        document.getElementById('details').style.display = "block";
+    }
+    
+    
     function expand(id){
         elements = document.getElementsByClassName(id);
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.display = "block";
         }
 
+        console.log(id+"-plus")
         plus = document.getElementById(id+"-plus");
         plus.style.display = "none";
         caret = document.getElementById(id+"-caret");
         caret.style.display = "inline-block";
     }
     function collapse(id){
+        // collaps direct children
         elements = document.getElementsByClassName(id);
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.display = "none";
         }
 
+        // collaps lower levels
+        elements = document.getElementsByClassName("c" + id);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "none";
+        }
+
+        // display plus
         plus = document.getElementById(id+"-plus");
         plus.style.display = "inline-block";
+
+        // hide caret
         caret = document.getElementById(id+"-caret");
         caret.style.display = "none";
+
+        // display children plus
+        elements = document.getElementsByClassName("c" + id+"-plus");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "inline-block";
+        }
+
+        // hide children caret
+        elements = document.getElementsByClassName("c" + id+"-caret");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "none";
+        }
     }
 </script>
 

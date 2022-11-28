@@ -112,6 +112,9 @@ class Area (models.Model):
 class AssetCategory (models.Model):
     name=models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.name}"
+
 class LineContent (models.Model):
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
@@ -177,6 +180,13 @@ class Asset (models.Model):
     @property
     def area_code(self):
         return self.area.code
+
+    @property
+    def get_name(self):
+        name = self.name
+        if self.name is None:
+            name = self.type.name
+        return name
     
 class AssetParent(models.Model):
     asset=models.OneToOneField(Asset, on_delete=models.RESTRICT, related_name='parent')

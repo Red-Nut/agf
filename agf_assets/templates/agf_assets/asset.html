@@ -8,39 +8,25 @@ Asset: {{asset.get_asset_no}}
 
 {% block main %}
 <div class="container-fluid">
-    <h1>{{asset.get_asset_no}}</h1>
     <div class="row">
         <div class="col">
             <!-- Asset Details -->
             <div class="card">
                 <div class="card-body">
+                    <h1>{{asset.get_asset_no}}</h1>
                     <table class="table">
                         <tr>
                             <th>Area</th>
                             <td>{{asset.area}}</td>
                         </tr>
-                        {% if asset.type.category.name == "Line" %}
-                        <tr>
-                            <th>Type</th>
-                            <td>Line Number</td>
-                        </tr>
-                        {% elif asset.type.category.name == "Valve" %}
-                        <tr>
-                            <th>Type</th>
-                            <td>Valve</td>
-                        </tr>
-                        {% else %}
                         <tr>
                             <th>Type</th>
                             <td>{{asset.type}}</td>
                         </tr>
-                        {% endif %}
-                        {% if asset.name is not None %}
                         <tr>
                             <th>Name</th>
-                            <td>{{asset.name}}</td>
+                            <td>{{asset.get_name}}</td>
                         </tr>
-                        {% endif %}
                         <tr>
                             <th>Status</th>
                             <td>{{asset.get_status_display}}</td>
