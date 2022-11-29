@@ -30,7 +30,7 @@ Name
                 <th>MAWOP</th>
             </tr>
             {% for well in wells %}
-            <tr>
+            <tr class="link" onclick="window.location.href='{% url 'asset' well.asset.id %}'">
                 <td>{{well.name}}</td>
                 <td>{{well.get_type_display}}</td>
                 <td>{{well.get_status_display}}</td>
