@@ -163,14 +163,35 @@ class Asset (models.Model):
     def __str__(self):
         return f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
 
+    @property
     def get_asset_no(self):
         if(self.type.category.name == "Line"):
             return f"{self.size:03}-{self.line_content.code}-{self.sequential_no:03}-{self.line_rating.code}"
         elif(self.type.category.name == "Valve"):
-            return f"{self.valve_spec}-{self.sequential_no:03}"
+            no = f"{self.valve_spec}-{self.sequential_no:03}"
         else:
-            return f"{self.type.code}-{self.sequential_no:04}"
+            no = f"{self.type.code}-{self.sequential_no:04}"
 
+        if self.suffix:
+            no += self.suffix
+
+        return no            
+
+    @property
+    def get_full_asset_no(self):
+        if(self.type.category.name == "Line"):
+            return f"{self.size:03}-{self.line_content.code}-{self.sequential_no:03}-{self.line_rating.code}"
+        elif(self.type.category.name == "Valve"):
+            no = f"{self.area.code}-{self.valve_spec}-{self.sequential_no:03}"
+        else:
+            no = f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
+
+        if self.suffix:
+            no += self.suffix
+
+        return no       
+
+    @property
     def get_legacy_display(self):
         if self.legacy_no is None:
             return "-"
@@ -195,3 +216,39 @@ class AssetParent(models.Model):
 class AssetDocumentReference (models.Model):
     asset=models.ForeignKey(Asset, on_delete=models.RESTRICT, related_name='asset_document_reference')
     document=models.ForeignKey('agf_documents.Document', on_delete=models.RESTRICT, related_name='assets_referred_by')
+
+class Well(models.Model):
+    EXPLORATION = 1
+    APPRAISAL = 2
+    PRODUCTION = 3
+
+    WELLTYPES = (
+        (EXPLORATION, _('Exploration')),
+        (APPRAISAL, _('Appraisal')),
+        (PRODUCTION, _('Production')),
+    )
+
+    PRODUCING = 1
+    SUSPENDED = 2
+    ABANDONED = 3
+
+    STATUS = (
+        (PRODUCING, _('Producing')),
+        (SUSPENDED, _('Suspended')),
+        (ABANDONED, _('Abandoned')),
+    )
+
+    asset = models.OneToOneField(Asset, on_delete=models.CASCADE, related_name="well_details")
+    name = models.CharField(max_length=255)
+    type = models.PositiveSmallIntegerField(choices=WELLTYPES)
+    status = models.PositiveSmallIntegerField(choices=STATUS)
+    latitude = models.FloatField()  # South is negative
+    longitude = models.FloatField()  # West is negative
+    elevation = models.FloatField(null=True, blank=True)  # Ground Elevation (m)
+    rotary_table = models.FloatField(null=True, blank=True)  # Kelly Bushing (m)
+    total_depth = models.FloatField(null=True, blank=True)  # Total Depth (Driller) (m)
+    spud_date = models.DateField(null=True, blank=True)
+    rig_release_date = models.DateField(null=True, blank=True)
+    plug_date = models.DateField(null=True, blank=True)
+    MAASP = models.FloatField(null=True, blank=True)  # Maximum Allowable Annular Surface Pressure (kPag)
+    MAWOP = models.FloatField(null=True, blank=True)  # Maximum Allowable Wellhead Operating Pressure (kPag)

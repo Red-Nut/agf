@@ -1,4 +1,6 @@
 {% extends 'agf_assets/base.html' %}
+{% load mathfilters %}
+
 {% block title %}
 Asset: {{asset.get_asset_no}}
 {% endblock %}
@@ -9,11 +11,11 @@ Asset: {{asset.get_asset_no}}
 {% block main %}
 <div class="container-fluid">
     <div class="row">
+        <!-- Asset Details -->
         <div class="col">
-            <!-- Asset Details -->
             <div class="card">
                 <div class="card-body">
-                    <h1>{{asset.get_asset_no}}</h1>
+                    <h1>{{asset.name}} ({{asset.get_full_asset_no}})</h1>
                     <table class="table">
                         <tr>
                             <th>Area</th>
@@ -31,12 +33,10 @@ Asset: {{asset.get_asset_no}}
                             <th>Status</th>
                             <td>{{asset.get_status_display}}</td>
                         </tr>
-                        {% if asset.legacy_no is not None %}
                         <tr>
                             <th>Legacy Number</th>
-                            <td>{{asset.legacy_no}}</td>
+                            <td>{{asset.get_legacy_display}}</td>
                         </tr>
-                        {% endif %}
                         {% if asset.size is not None %}
                         <tr>
                             <th>Size</th>
@@ -64,10 +64,111 @@ Asset: {{asset.get_asset_no}}
                     </table>
                 </div>
             </div>
-        </div>
+        
+            <!-- Well Details -->
+            {% if asset.well_details %}
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <h1>Well Details</h1>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{asset.well_details.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{asset.well_details.get_type_display}}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{asset.well_details.get_status_display}}</td>
+                        </tr>
 
+                        <tr></tr>
+
+                        <tr>
+                            <th>Longitude</th>
+                            <td>
+                                {{asset.well_details.latitude|abs}}
+                                {% if asset.well_details.latitude < 0 %}
+                                South
+                                {% else %}
+                                North
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Latitude</th>
+                            <td>
+                                {{asset.well_details.longitude}}
+                                {% if asset.well_details.longitude < 0 %}
+                                West
+                                {% else %}
+                                East
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr></tr>
+
+                        <tr>
+                            <th>Elevation</th>
+                            <td>{{asset.well_details.elevation|floatformat:2}}m</td>
+                        </tr>
+                        <tr>
+                            <th>Rotary Table (Kelly Bushing)</th>
+                            <td>{{asset.well_details.rotary_table|floatformat:2}}m</td>
+                        </tr>
+                        <tr>
+                            <th>Total Depth</th>
+                            <td>{{asset.well_details.total_depth|floatformat:2}}m</td>
+                        </tr>
+
+                        <tr></tr>
+
+                        <tr>
+                            <th>Spud Date</th>
+                            <td>{{asset.well_details.spud_date|date:"d/m/Y"}}</td>
+                        </tr>
+                        <tr>
+                            <th>Rig Release Date</th>
+                            <td>{{asset.well_details.rig_release_date|date:"d/m/Y"}}</td>
+                        </tr>
+                        <tr>
+                            <th>Plug Date</th>
+                            <td>{{asset.well_details.plug_date|date:"d/m/Y"}}</td>
+                        </tr>
+
+                        <tr></tr>
+                        
+                        <tr>
+                            <th>Maximum Allowable<br>Annular Surface Pressure<br>(MAASP)</th>
+                            <td>
+                                {% if asset.well_details.MAASP %}
+                                {{asset.well_details.MAASP}}kPag
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Maximum Allowable<br>Wellhead Operating Pressure<br>(MAWOP)</th>
+                            <td>
+                                {% if asset.well_details.MAWOP %}
+                                {{asset.well_details.MAWOP}}kPag
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Reference Documents -->
         <div class="col">
-            <!-- Reference Documents -->
             <div class="card">
                 <div class="card-body">
                     <table class="table">
@@ -88,6 +189,8 @@ Asset: {{asset.get_asset_no}}
                 </div>
             </div>
         </div>
+
+        
     </div>
 </div>
 

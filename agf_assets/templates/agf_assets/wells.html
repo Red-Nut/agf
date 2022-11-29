@@ -1,0 +1,85 @@
+{% extends 'agf_assets/base.html' %}
+{% load mathfilters %}
+
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<br>
+<br>
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Elevation</th>
+                <th>Rotary Table</th>
+                <th>Total Depth</th>
+                <th>Spud Date</th>
+                <th>Rig Release Date</th>
+                <th>Plug Date</th>
+                <th>MAASP</th>
+                <th>MAWOP</th>
+            </tr>
+            {% for well in wells %}
+            <tr>
+                <td>{{well.name}}</td>
+                <td>{{well.get_type_display}}</td>
+                <td>{{well.get_status_display}}</td>
+                
+                <td>
+                    {{well.latitude|abs}}
+                    {% if well.latitude < 0 %}
+                    South
+                    {% else %}
+                    North
+                    {% endif %}
+                </td>
+                <td>
+                    {{well.longitude}}
+                    {% if well.longitude < 0 %}
+                    West
+                    {% else %}
+                    East
+                    {% endif %}
+                </td>
+
+                <td>{{well.elevation|floatformat:2}}m</td>
+                <td>{{well.rotary_table|floatformat:2}}m</td>
+                <td>{{well.total_depth|floatformat:2}}m</td>
+                
+                <td>{{well.spud_date|date:"d/m/Y"}}</td>
+                <td>{{well.rig_release_date|date:"d/m/Y"}}</td>
+                <td>{{well.plug_date|date:"d/m/Y"}}</td>
+                
+                <td>
+                    {% if well.MAASP %}
+                    {{well.MAASP}}kPag
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if well.MAWOP %}
+                    {{well.MAWOP}}kPag
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

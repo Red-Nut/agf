@@ -61,6 +61,15 @@ def AssetPage(request, id):
 
     return render(request, "agf_assets/asset.html", context)
 
+def WellPage(request):
+    wells = Well.objects.order_by('status','name')
+
+    context = {
+        'wells' : wells,
+    }
+
+    return render(request, "agf_assets/wells.html", context)
+
 def Search():
     pass
 
