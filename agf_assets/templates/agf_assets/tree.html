@@ -38,7 +38,7 @@ Asset Tree
                         '{{asset1.area}}',
                         '{{asset1.get_status_display}}',
                         '{{asset1.legacy_no}}'
-                        )">{{asset1}}</span>
+                        )">{{asset1.get_name}}</span>
                 </p>
                     <!-- Level 2 -->
                     {% for child2 in asset1.children.all %}
@@ -57,7 +57,7 @@ Asset Tree
                             '{{child2.asset.area}}',
                             '{{child2.asset.get_status_display}}',
                             '{{child2.asset.legacy_no}}'
-                            )">{{child2.asset}}</span>
+                            )">{{child2.asset.get_name}}</span>
                     </p>
                         <!-- Level 3 -->
                         {% for child3 in child2.asset.children.all %}
@@ -76,7 +76,7 @@ Asset Tree
                                 '{{child3.asset.area}}',
                                 '{{child3.asset.get_status_display}}',
                                 '{{child3.asset.legacy_no}}'
-                                )">{{child3.asset}}</span>
+                                )">{{child3.asset.get_name}}</span>
                         </p>
                             <!-- Level 4 -->
                             {% for child4 in child3.asset.children.all %}
@@ -95,7 +95,7 @@ Asset Tree
                                     '{{child4.asset.area}}',
                                     '{{child4.asset.get_status_display}}',
                                     '{{child4.asset.legacy_no}}'
-                                    )">{{child4.asset}}</span>
+                                    )">{{child4.asset.get_name}}</span>
                             </p>
                                 <!-- Level 5 -->
                                 {% for child5 in child4.asset.children.all %}
@@ -114,7 +114,7 @@ Asset Tree
                                         '{{child5.asset.area}}',
                                         '{{child5.asset.get_status_display}}',
                                         '{{child5.asset.legacy_no}}'
-                                        )">{{child5.asset}}</span>
+                                        )">{{child5.asset.get_name}}</span>
                                 </p>
                                 {% endfor %}
                             {% endfor %}
