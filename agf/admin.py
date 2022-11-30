@@ -25,6 +25,8 @@ class PetroleumLicenceAdmin(admin.ModelAdmin):
         return ['type', 'number']
 admin.site.register(PetroleumLicence, PetroleumLicenceAdmin)
 
+admin.site.register(Region)
+
 class AreaAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "code", "permit")
     search_fields = ['name']
@@ -72,7 +74,7 @@ class AssetAdmin(admin.ModelAdmin):
         return ['area','type__category','sequential_no']
 admin.site.register(Asset, AssetAdmin)
 
-
+admin.site.register(Well)
 
 
 # Documents

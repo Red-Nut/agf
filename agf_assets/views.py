@@ -62,10 +62,20 @@ def AssetPage(request, id):
     return render(request, "agf_assets/asset.html", context)
 
 def WellPage(request):
-    wells = Well.objects.order_by('status','name')
+    wells = Well.objects.order_by('asset__area__region','status','name')
+    regions = []
+
+    region = ""
+    for well in wells:
+        if well.asset.area.region.name != region:
+            region = well.asset.area.region.name
+            regions.append(region)
+
+    #regions = Region.objects.filter().order_by('name')
 
     context = {
         'wells' : wells,
+        'regions' : regions,
     }
 
     return render(request, "agf_assets/wells.html", context)

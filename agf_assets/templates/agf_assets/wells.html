@@ -2,7 +2,7 @@
 {% load mathfilters %}
 
 {% block title %}
-Name
+Well Register
 {% endblock %}
 
 {% block header %}
@@ -11,74 +11,171 @@ Name
 {% block main %}
 <br>
 <br>
-<div class="card">
-    <div class="card-body">
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
-                <th>Elevation</th>
-                <th>Rotary Table</th>
-                <th>Total Depth</th>
-                <th>Spud Date</th>
-                <th>Rig Release Date</th>
-                <th>Plug Date</th>
-                <th>MAASP</th>
-                <th>MAWOP</th>
-            </tr>
-            {% for well in wells %}
-            <tr class="link" onclick="window.location.href='{% url 'asset' well.asset.id %}'">
-                <td>{{well.name}}</td>
-                <td>{{well.get_type_display}}</td>
-                <td>{{well.get_status_display}}</td>
-                
-                <td>
-                    {{well.latitude|abs}}
-                    {% if well.latitude < 0 %}
-                    South
-                    {% else %}
-                    North
-                    {% endif %}
-                </td>
-                <td>
-                    {{well.longitude}}
-                    {% if well.longitude < 0 %}
-                    West
-                    {% else %}
-                    East
-                    {% endif %}
-                </td>
+<!-- Tabs -->
+<ul class="nav nav-tabs">
+    <li class="nav-item active"><a class="nav-link myTab active" data-toggle="tab" href="#all">All Regions</a></li>
+    
+    {% for region in regions %}
+    <li class="nav-item"><a class="nav-link myTab" data-toggle="tab" href="#{{region}}">{{region}}</a></li>
+    {% endfor %}
+</ul>
 
-                <td>{{well.elevation|floatformat:2}}m</td>
-                <td>{{well.rotary_table|floatformat:2}}m</td>
-                <td>{{well.total_depth|floatformat:2}}m</td>
-                
-                <td>{{well.spud_date|date:"d/m/Y"}}</td>
-                <td>{{well.rig_release_date|date:"d/m/Y"}}</td>
-                <td>{{well.plug_date|date:"d/m/Y"}}</td>
-                
-                <td>
-                    {% if well.MAASP %}
-                    {{well.MAASP}}kPag
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-                <td>
-                    {% if well.MAWOP %}
-                    {{well.MAWOP}}kPag
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </table>
+<!-- Tab Content -->
+<div class="tab-content">
+    <!-- All Regions -->
+    <div id="all" class="tab-pane fade show active">
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <table class="table table-striped table-bordered table-sm">
+                    <tr>
+                        <th class="th-sm">Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Longitude</th>
+                        <th>Latitude</th>
+                        <th>Elevation</th>
+                        <th>Rotary Table</th>
+                        <th>Total Depth</th>
+                        <th>Spud Date</th>
+                        <th>Rig Release Date</th>
+                        <th>Plug Date</th>
+                        <th>MAASP</th>
+                        <th>MAWOP</th>
+                    </tr>
+                    <tbody>
+                    {% for well in wells %}
+                    <tr class="link" onclick="window.location.href='{% url 'asset' well.asset.id %}'">
+                        <td>{{well.name}}</td>
+                        <td>{{well.get_type_display}}</td>
+                        <td>{{well.get_status_display}}</td>
+                        
+                        <td>
+                            {{well.latitude|abs}}
+                            {% if well.latitude < 0 %}
+                            South
+                            {% else %}
+                            North
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{well.longitude}}
+                            {% if well.longitude < 0 %}
+                            West
+                            {% else %}
+                            East
+                            {% endif %}
+                        </td>
+
+                        <td>{{well.elevation|floatformat:2}}m</td>
+                        <td>{{well.rotary_table|floatformat:2}}m</td>
+                        <td>{{well.total_depth|floatformat:2}}m</td>
+                        
+                        <td>{{well.spud_date|date:"d/m/Y"}}</td>
+                        <td>{{well.rig_release_date|date:"d/m/Y"}}</td>
+                        <td>{{well.plug_date|date:"d/m/Y"}}</td>
+                        
+                        <td>
+                            {% if well.MAASP %}
+                            {{well.MAASP}}kPag
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if well.MAWOP %}
+                            {{well.MAWOP}}kPag
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <!-- Iterate for each region -->
+    {% for region in regions %}
+    <div id="{{region}}" class="tab-pane fade">
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <table class="table table-striped table-bordered table-sm">
+                    <tr>
+                        <th class="th-sm">Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Longitude</th>
+                        <th>Latitude</th>
+                        <th>Elevation</th>
+                        <th>Rotary Table</th>
+                        <th>Total Depth</th>
+                        <th>Spud Date</th>
+                        <th>Rig Release Date</th>
+                        <th>Plug Date</th>
+                        <th>MAASP</th>
+                        <th>MAWOP</th>
+                    </tr>
+                    <tbody>
+                    {% for well in wells %}
+                    {% if well.asset.area.region.name == region %}
+                    <tr class="link" onclick="window.location.href='{% url 'asset' well.asset.id %}'">
+                        <td>{{well.name}}</td>
+                        <td>{{well.get_type_display}}</td>
+                        <td>{{well.get_status_display}}</td>
+                        
+                        <td>
+                            {{well.latitude|abs}}
+                            {% if well.latitude < 0 %}
+                            South
+                            {% else %}
+                            North
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{well.longitude}}
+                            {% if well.longitude < 0 %}
+                            West
+                            {% else %}
+                            East
+                            {% endif %}
+                        </td>
+
+                        <td>{{well.elevation|floatformat:2}}m</td>
+                        <td>{{well.rotary_table|floatformat:2}}m</td>
+                        <td>{{well.total_depth|floatformat:2}}m</td>
+                        
+                        <td>{{well.spud_date|date:"d/m/Y"}}</td>
+                        <td>{{well.rig_release_date|date:"d/m/Y"}}</td>
+                        <td>{{well.plug_date|date:"d/m/Y"}}</td>
+                        
+                        <td>
+                            {% if well.MAASP %}
+                            {{well.MAASP}}kPag
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if well.MAWOP %}
+                            {{well.MAWOP}}kPag
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
 </div>
 
 

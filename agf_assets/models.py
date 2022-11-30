@@ -100,9 +100,16 @@ class ReplacementPL(models.Model):
     replacement=models.ForeignKey(PetroleumLicence, on_delete=models.RESTRICT, related_name='previous_PL')
 
 # Asset Area
+class Region (models.Model):
+    name=models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name}"
+
 class Area (models.Model):
     name=models.CharField(max_length=255)
     code=models.CharField(max_length=10)
+    region=models.ForeignKey(Region, on_delete=models.RESTRICT, related_name="areas")
     permit=models.ForeignKey(PetroleumLicence, null=True, blank=True, on_delete=models.RESTRICT, related_name='areas')
 
     def __str__(self):
@@ -161,7 +168,17 @@ class Asset (models.Model):
     size=models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
+        if(self.type.category.name == "Line"):
+            return f"{self.size:03}-{self.line_content.code}-{self.sequential_no:03}-{self.line_rating.code}"
+        elif(self.type.category.name == "Valve"):
+            no = f"{self.valve_spec}-{self.sequential_no:03}"
+        else:
+            no = f"{self.type.code}-{self.sequential_no:04}"
+
+        if self.suffix:
+            no += self.suffix
+
+        return no     
 
     @property
     def get_asset_no(self):
@@ -252,3 +269,6 @@ class Well(models.Model):
     plug_date = models.DateField(null=True, blank=True)
     MAASP = models.FloatField(null=True, blank=True)  # Maximum Allowable Annular Surface Pressure (kPag)
     MAWOP = models.FloatField(null=True, blank=True)  # Maximum Allowable Wellhead Operating Pressure (kPag)
+
+    def __str__(self):
+        return f"{self.name}"
