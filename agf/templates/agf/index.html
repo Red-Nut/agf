@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+Australian Gasfields
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card link" onclick="window.location.href='{% url 'asset_tree' %}'" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fas fa-industry" style="color:#6698c9;"></i>  AMS</h1>
+                <h5 class="m-0">Asset Management System</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card link" onclick="window.location.href='{% url 'documents' %}'" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fas fa-book-open" style="color:#dbb04d;"></i>  DMS</h1>
+                <h5 class="m-0">Document Management System</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fas fa-leaf" style="color:#2f9c65;"></i>  HSECH</h1>
+                <h5 class="m-0">Health Safety Environment and Cultural Heritage</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fas fa-user-shield" style="color:#A40E4C"></i>  HR</h1>
+                <h5 class="m-0">Human Resources</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fas fa-wrench" style="color:#7A8B99"></i>  MMS</h1>
+                <h5 class="m-0">Maintenance Management System</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card" style="height:100%;">
+            <div class="card-body">
+                <h1><i class="fab fa-hotjar" style="color:#69353F;"></i>  WIMS</h1>
+                <h5 class="m-0">Well Integrity Management System</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
