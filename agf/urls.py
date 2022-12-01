@@ -20,7 +20,10 @@ from django.contrib.auth.views import LoginView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from . import views
+
 urlpatterns = [
+    path('', views.Index,  name='home'),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
 

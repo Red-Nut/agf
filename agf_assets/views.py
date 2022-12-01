@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from django.contrib.auth.decorators import login_required
 import json
 
 from agf_documents.models import DocumentRevision
@@ -39,6 +40,7 @@ class Index(TemplateView):
 
         return context
 
+@login_required
 def AssetTree(request):
     areas = Area.objects.order_by("code").all()
 
@@ -52,6 +54,7 @@ def AssetTree(request):
 
     return render(request, "agf_assets/tree.html", context)
 
+@login_required
 def AssetPage(request, id):
     asset = Asset.objects.get(id=id)
 
@@ -61,6 +64,7 @@ def AssetPage(request, id):
 
     return render(request, "agf_assets/asset.html", context)
 
+@login_required
 def WellPage(request):
     wells = Well.objects.order_by('asset__area__region','status','name')
     regions = []

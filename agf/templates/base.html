@@ -42,11 +42,11 @@
 
     <header class="fixed-top c-background">
         <nav class="navbar navbar-expand-md navbar-light p-0 c-navbarbackground">
-            <a href="{% url 'documents' %}" class="navbar-brand text-light p-0 c-navbarbackground">
+            <a href="{% url 'asset_tree' %}" class="navbar-brand text-light p-0 c-navbarbackground">
                 <div class="px-3 py-1 pe-5 c-navbarbackground">
                     <img src="{% static 'img/logo/transparent.png' %}" height="45" alt="" class="d-inline-block align-middle mr-2">
                     <!-- Logo Text -->
-                    <span class="font-weight-bold align-middle c-base" >Australian Gasfields</span>
+                    <span class="font-weight-bold align-middle" style="color:white;">Australian Gasfields</span>
                 </div>
             </a>
 
@@ -58,6 +58,7 @@
             <!-- Navbar -->
             <div class="collapse navbar-collapse" style="font-size: larger"  id="navbarToggler">
                 <div class="navbar-nav ms-auto">
+                    <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'home' %}">Logout</a>
                 </div>
             </div>
         </nav>
