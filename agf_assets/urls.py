@@ -23,7 +23,6 @@ urlpatterns = [
     path('asset/<int:id>/', views.AssetPage, name='asset'),
     path('search', views.Search, name='asset_search'),
     path('create', views.Create, name='asset_create'),
-    
-    path('wells', views.WellPage, name='wells'),
+
 ]
 

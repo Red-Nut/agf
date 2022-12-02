@@ -6,7 +6,7 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
-    <meta name="description" content="AGF Health Safety Environment and Cultural Heritage">
+    <meta name="description" content="AGF Well Integrity Management System">
 
     <!-- Stylesheets -->
     <link 
@@ -25,7 +25,7 @@
         crossorigin="anonymous">  -->
     <link 
         rel="stylesheet"  
-        href="{% static 'css/hse.css' %}"
+        href="{% static 'css/wims.css' %}"
         type="text/css"/>
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
@@ -42,11 +42,15 @@
 
     <header class="fixed-top c-background">
         <nav class="navbar navbar-expand-md navbar-light p-0 c-navbarbackground">
-            <a href="#" class="navbar-brand text-light p-0 c-navbarbackground">
-                <div class="px-3 py-1 pe-5 c-navbarbackground">
+            <a href="{% url 'home' %}" class="navbar-brand text-light p-0 c-navbarbackground">
+                <div class="ps-3 py-1 c-navbarbackground">
                     <img src="{% static 'img/logo/transparent.png' %}" height="45" alt="" class="d-inline-block align-middle mr-2">
-                    <!-- Logo Text -->
-                    <span class="font-weight-bold align-middle c-comp" style="font-size: larger;">Health Safety and Environment</span>
+                </div>
+            </a>
+            <!-- Logo Text -->
+            <a href="{% url 'wells' %}" class="navbar-brand text-light p-0 c-navbarbackground">
+                <div class="py-1 pe-5 c-navbarbackground">
+                    <span class="font-weight-bold align-middle c-base" style="color:white;">Well Integrity Management System</span>
                 </div>
             </a>
 
@@ -58,9 +62,7 @@
             <!-- Navbar -->
             <div class="collapse navbar-collapse" style="font-size: larger"  id="navbarToggler">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-item text-light nav-link ps-2 me-3" href="#"></a>
-                    <a class="nav-item text-light nav-link ps-2 me-3" href="#"></a>
-                    <a class="nav-item text-light nav-link ps-2 me-3" href="#"></a>
+                    <a class="nav-item text-light nav-link ps-2 me-3" href="{% url 'wells' %}">Well Register</a>
                 </div>
             </div>
         </nav>

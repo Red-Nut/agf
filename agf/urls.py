@@ -35,5 +35,8 @@ urlpatterns = [
 
     # HSE
     path('hse/', include('agf_hse.urls')),
+
+    # WIMS
+    path('wims/', include('agf_wims.urls')),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
