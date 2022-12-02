@@ -9,8 +9,6 @@ Well Register
 {% endblock %}
 
 {% block main %}
-<br>
-<br>
 <!-- Tabs -->
 <ul class="nav nav-tabs">
     <li class="nav-item active"><a class="nav-link myTab active" data-toggle="tab" href="#all">All Regions</a></li>
@@ -25,7 +23,7 @@ Well Register
     <!-- All Regions -->
     <div id="all" class="tab-pane fade show active">
         <div class="card" style="width: 100%;">
-            <div class="card-body">
+            <div class="card-body" style="height: 80vh; overflow-y: scroll; overflow-x: scroll;">
                 <table class="table table-striped table-bordered table-sm">
                     <tr>
                         <th class="th-sm">Name</th>
@@ -101,7 +99,7 @@ Well Register
     {% for region in regions %}
     <div id="{{region}}" class="tab-pane fade">
         <div class="card" style="width: 100%;">
-            <div class="card-body">
+            <div class="card-body" style="height: 80vh; overflow-y: scroll; overflow-x: scroll;">
                 <table class="table table-striped table-bordered table-sm">
                     <tr>
                         <th class="th-sm">Name</th>
