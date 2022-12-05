@@ -19,10 +19,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.AssetTree, name='asset_tree'),
-    path('asset/<int:id>/', views.AssetPage, name='asset'),
-    path('search', views.Search, name='asset_search'),
-    path('create', views.Create, name='asset_create'),
+    path('', views.StoresPage, name='stores'),
 
 ]
 

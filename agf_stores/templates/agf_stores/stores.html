@@ -1,0 +1,32 @@
+{% extends 'agf_stores/base.html' %}
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-body">
+        <table>
+            <tr>
+                <th>Stores</th>
+                <th>Location</th>
+            </tr>
+            {% for store in stores %}
+            <tr>
+                <td>
+                    {{store.name}}
+                </td>
+                <td>
+                    {{store.area}}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

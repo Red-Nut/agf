@@ -36,8 +36,11 @@ urlpatterns = [
     # HSE
     path('hse/', include('agf_hse.urls')),
     
-    # WIMS
+    # Maintenance
     path('maintenance/', include('agf_maintenance.urls')),
+
+    # Stores
+    path('stores/', include('agf_stores.urls')),
 
     # WIMS
     path('wims/', include('agf_wims.urls')),
