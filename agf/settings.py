@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'agf_files',
     'agf_hse',
     'agf_maintenance',
+    'agf_stores',
     'agf_wims',
 ]
 
