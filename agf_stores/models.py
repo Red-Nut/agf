@@ -9,6 +9,9 @@ from agf_maintenance.models import *
 class Company(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Store (models.Model):
     name=models.CharField(max_length=100)
     area=models.ForeignKey(Area,on_delete=models.RESTRICT, related_name="stores")
@@ -34,7 +37,7 @@ class Item (models.Model):
     description=models.CharField(max_length=1000, null=True, blank=True)
     unit=models.PositiveSmallIntegerField(choices=UNITS)
     part_no=models.CharField(max_length=100)
-    supplier=models.CharField(max_length=100)
+    supplier=models.ForeignKey(Company, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.name
@@ -67,19 +70,26 @@ class Stock (models.Model):
         except:
             return False
 
-@property
-def below_min (self):
-    if self.qty < self.min:
-        return True
-    else: 
-        return False
+    @property
+    def below_min (self):
+        if self.qty < self.min:
+            return True
+        else: 
+            return False
 
-@property
-def order_qty (self):
-    if self.qty < self.min:
-        return self.max - self.qty
-    else: 
-        return 0
+    @property
+    def order_qty (self):
+        if self.qty < self.min:
+            return self.max - self.qty
+        else: 
+            return 0
+
+    @property
+    def get_location (self):
+        if self.location:
+            return self.location
+        else:
+            return "-"
 
 class WOItems(models.Model):
     wo = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name="items")

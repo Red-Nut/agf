@@ -9,13 +9,13 @@ Name
 {% block main %}
 <div class="card">
     <div class="card-body">
-        <table>
+        <table class="table">
             <tr>
                 <th>Stores</th>
                 <th>Location</th>
             </tr>
             {% for store in stores %}
-            <tr>
+            <tr class="link" onclick="window.location.href='{% url 'store' store.id %}'">
                 <td>
                     {{store.name}}
                 </td>

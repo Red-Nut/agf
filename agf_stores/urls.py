@@ -20,6 +20,7 @@ from . import views
 
 urlpatterns = [
     path('', views.StoresPage, name='stores'),
+    path('store/<int:id>', views.StorePage, name='store'),
 
 ]
 

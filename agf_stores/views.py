@@ -20,3 +20,13 @@ def StoresPage(request):
     }
 
     return render(request, "agf_stores/stores.html", context)
+
+@login_required
+def StorePage(request, id):
+    store = Store.objects.get(id=id)
+
+    context = {
+        'store' : store,
+    }
+
+    return render(request, "agf_stores/store.html", context)

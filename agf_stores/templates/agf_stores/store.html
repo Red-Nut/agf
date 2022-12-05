@@ -1,0 +1,41 @@
+{% extends 'agf_stores/base.html' %}
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-body">
+        <h1>{{store.name}}</h1>
+        <table class="table table-striped">
+            <tr>
+                <th>Part No.</th>
+                <th>Item</th>
+                <th>Supplier</th>
+                <th style="text-align:center;">Qty</th>
+                <th style="text-align:center;">Min</th>
+                <th style="text-align:center;">Max</th>
+                <th style="text-align:center;">Location</th>
+                <th>Notes</th>
+            </tr>
+            {% for stock in store.stocks.all %}
+            <tr>
+                <td>{{stock.item.part_no}}</td>
+                <td>{{stock.item.name}}</td>
+                <td>{{stock.item.supplier}}</td>
+                <td style="text-align:center;">{{stock.qty}}</td>
+                <td style="text-align:center;">{{stock.min}}</td>
+                <td style="text-align:center;">{{stock.max}}</td>
+                <td style="text-align:center;">{{stock.get_location}}</td>
+                <td>{{stock.comment}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
