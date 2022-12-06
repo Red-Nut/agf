@@ -92,7 +92,7 @@ a:hover{
     padding-right: 24px;
 }
 .nav-item{
-    color: var(--base-color) !important;
+    color: white !important;
 }
 
 /* Tabs */

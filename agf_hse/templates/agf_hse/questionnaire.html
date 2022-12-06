@@ -8,43 +8,49 @@
 
 {% block main %} 
 <div class="container-fluid">
-    <h2>Australian Gasfields: {{questionnaire.name}}</h2>
-
     <form name=questionnaire action="{% url 'induction' id=questionnaire.id %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="questionnaireID" value="{{questionnaire.id}}">
+        <div class="card">
+            <div class="card-body">
+                <h2>Australian Gasfields: {{questionnaire.name}}</h2>
 
-        <!--- Name and Email -->
-        <table>
-            <tr>
-                <td class="pe-3">
-                    <label for="name">Name</label>
-                </td>
-                <td>
-                    <input type="text" name="name" id="name" value="{{name}}" autocomplete="name" required>
-                </td>
-            </tr>
-            <tr>
-                <td class="pe-3">
-                    <label for="email">Email Address</label></td>
-                </td>
-                <td>
-                    <input type="email" name="email" id="email" value="{{email}}" required>
-                </td>
-            </tr>
-        </table>
-        <br>
+                <!--- Name and Email -->
+                <table>
+                    <tr>
+                        <td class="pe-3">
+                            <label for="name">Name</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" id="name" value="{{name}}" autocomplete="name" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pe-3">
+                            <label for="email">Email Address</label></td>
+                        </td>
+                        <td>
+                            <input type="email" name="email" id="email" value="{{email}}" required>
+                        </td>
+                    </tr>
+                </table>
 
-        <!--- Score -->
-        {% if pass != None %}
-        <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
-            {% if pass %}
-            <i class="c-base">Test Passed</i>
-            {% else %}
-            <i class="c-error">Test Failed</i>
-            {% endif %}
-        </p>
-        {% endif %}
+                <br>
+
+                <!--- Score -->
+                {% if pass != None %}
+                <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
+                    {% if pass %}
+                    <i class="c-base">Test Passed</i>
+                    {% else %}
+                    <i class="c-error">Test Failed</i>
+                    {% endif %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        
+        
 
         <!--- Incomplete Questions -->
         {% if pass is not None %}
