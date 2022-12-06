@@ -2,17 +2,29 @@ from django.contrib import admin
 
 from .models import *
 
-# Register your models here.
+
+
 class EmailInline(admin.TabularInline):
     model = QuestionaireEmailResult
+    extra=0
+    verbose_name = "User"
+    verbose_name_plural = "Email Results to the following users"
+
+class QuestionInline(admin.TabularInline):
+    model = Question
+    fields=('question',)
+    readonly_fields=('question',)
+    show_change_link = True
+    extra=0
 
 class QuestionnaireAdmin(admin.ModelAdmin):
     list_display = ['id','name']
     search_fields = ['name']
-    inlines = [EmailInline]
+    inlines = [EmailInline, QuestionInline]
     def get_ordering(self, request):
         return ['id']
 admin.site.register(Questionnaire, QuestionnaireAdmin)
+
 
 
 

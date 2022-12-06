@@ -15,7 +15,9 @@ Name
                 <th>Name</th>
                 <th>Pass Mark</th>
                 <th>Link</th>
+                {% if request.user.is_staff %}
                 <th></th>
+                {% endif %}
             </tr>
             {% for questionnaire in questionnaires %}
             <tr>
@@ -28,7 +30,11 @@ Name
                 <td><a href="{% url 'induction' id=questionnaire.id %}">{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'induction' id=questionnaire.id %}</a></td>
                 {% endif %}
 
+                
+                {% if request.user.is_staff %}
                 <td><a class="btn btn-primary" href="/admin/agf_hse/questionnaire/{{questionnaire.id}}/change">Edit</a></td>
+                {% endif %}
+                
             </tr>
             {% endfor %}
        </table>
