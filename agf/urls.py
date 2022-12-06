@@ -9,6 +9,8 @@ from . import views
 
 urlpatterns = [
     path('', views.Index,  name='home'),
+
+    # Built in
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
 

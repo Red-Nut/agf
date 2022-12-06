@@ -37,7 +37,6 @@ ALLOWED_HOSTS = ['10.10.10.80','agf.my.to']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mathfilters',
     'agf',
+    'django.contrib.admin',
     'agf_documents',
     'agf_assets',
     'agf_files',
@@ -157,3 +157,4 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # User Accounts
 LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
