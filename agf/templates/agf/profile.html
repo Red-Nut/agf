@@ -1,0 +1,26 @@
+{% extends 'agf/base.html' %}
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-body">
+        <h2>User Profile</h2>
+        <table class="table" style="width:auto;">
+            <tr><th>First Name: </th><td>{{user.first_name}}</td></tr>
+            <tr><th>Last Name: </th><td>{{user.last_name}}</td></tr>
+            <tr><th>Email: </th><td>{{user.email}}</td></tr>
+            <tr><td><br></td><td><br></td></tr>
+            <tr><th>Username: </th><td>{{user.username}}</td></tr>
+        </table>
+        <br>
+        <a class="btn btn-primary" href="{% url 'password_change' %}">Change Password</a>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -9,6 +9,7 @@ from . import views
 
 urlpatterns = [
     path('', views.Index,  name='home'),
+    path('profile', views.Profile,  name='profile'),
 
     # Built in
     path('admin/', admin.site.urls),
