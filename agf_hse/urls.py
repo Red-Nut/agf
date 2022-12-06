@@ -19,7 +19,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.Dashboard, name='hsech'),
+
     path('induction/<int:id>/', views.QuestionnairePage, name='induction'),
-    path('induction/<str:url>/', views.QuestionnaireURL),
+    path('induction/<str:url>/', views.QuestionnaireURL, name='induction_str'),
     path('formSubmission/', views.QuestionnaireComplete, name='questionnaire_complete')
 ]

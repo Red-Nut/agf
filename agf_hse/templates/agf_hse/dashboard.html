@@ -1,0 +1,39 @@
+{% extends 'agf_hse/base.html' %}
+{% block title %}
+Name
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-body">
+       <h3>Inductions</h3>
+       <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Pass Mark</th>
+                <th>Link</th>
+                <th></th>
+            </tr>
+            {% for questionnaire in questionnaires %}
+            <tr>
+                <td>{{questionnaire.name}}</td>
+                <td>{{questionnaire.pass_mark}}%</td>
+
+                {% if questionnaire.url %}
+                <td><a href="{% url 'induction_str' url=questionnaire.url %}">{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'induction_str' url=questionnaire.url %}</a></td>
+                {% else %}
+                <td><a href="{% url 'induction' id=questionnaire.id %}">{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'induction' id=questionnaire.id %}</a></td>
+                {% endif %}
+
+                <td><a class="btn btn-primary" href="/admin/agf_hse/questionnaire/{{questionnaire.id}}/change">Edit</a></td>
+            </tr>
+            {% endfor %}
+       </table>
+    </div>
+</div>
+
+
+{% endblock %}

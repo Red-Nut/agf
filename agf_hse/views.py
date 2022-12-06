@@ -5,6 +5,15 @@ from django.core.mail import EmailMessage
 from .models import *
 
 # Create your views here.
+def Dashboard(request):
+    questionnaires = Questionnaire.objects.all()
+
+    context = {
+        'questionnaires' : questionnaires,
+    }
+
+    return render(request, "agf_hse/dashboard.html", context)
+
 def QuestionnairePage(request, id):
 
     if request.method != "POST":
