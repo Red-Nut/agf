@@ -3,10 +3,14 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.urls import reverse
 
 # Other module imports
 from agf_documents.models import *
 from agf_assets.models import *
+
+# Third Part Imports.
+from datetime import date
 
 # Files
 class File (models.Model):
@@ -42,6 +46,22 @@ class FileMeta(models.Model):
 class DocumentFile (models.Model):
     document_revision=models.ForeignKey(DocumentRevision, on_delete=models.CASCADE, related_name='document_files')
     file=models.ForeignKey(File, on_delete=models.RESTRICT, related_name='file_document')
+    public_link=models.CharField(max_length=255, null=True, blank=True, unique=True)
+    link_expiry=models.DateField(null=True, blank=True)
+
+    @property
+    def get_public_link(self):
+        print("here1")
+        if self.link_expiry is not None:
+            print("here")
+            print(self.link_expiry)
+            print(self.public_link)
+            if date.today() < self.link_expiry:
+                return reverse('documet_public_link', kwargs={'link':self.public_link})
+            else:
+                return None
+        else:
+            return None
 
 class Image (models.Model):
     file=models.ForeignKey(File, on_delete=models.RESTRICT, related_name='file_image')

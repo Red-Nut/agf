@@ -67,7 +67,15 @@ Document: {{document.document_no}}
                             <td>{{rev.get_reason_display}}</td>
                             <td>
                                 {% for file in rev.document_files.all %}
-                                <a href="{{file.file.url}}" target="_blank">{{file.file}}</a>
+                                <table>
+                                    <tr><td><a href="{{file.file.url}}" target="_blank">{{file.file}}</a><a class="btn btn-primary ms-2 px-1 py-0" title="Create public link." href="{% url 'documet_create_public_link' id=file.id%}"><i class="fas fa-link"></i></td></tr>
+                                    {% if file.get_public_link %}
+                                    <tr><td><a href="{{file.get_public_link}}">Public Link</a></td></tr>
+                                    {% endif %}
+                                    
+                                </table>
+                                
+                                
                                 {% endfor %}
                             </td>
                         </tr>

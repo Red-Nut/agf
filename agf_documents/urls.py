@@ -24,8 +24,12 @@ urlpatterns = [
 
     # Document Page
     path('document/<int:id>/', views.DocumentPage, name='document'),
+
     path('document_new_revision/<int:id>/', views.NewDocumentRevision, name='document_new_revision'),
     path('document_new_reference/<int:id>/', views.NewDocumentReference, name='document_new_reference'),
+
+    path('documet_create_public_link/<int:id>/', views.CreatePublicLink, name='documet_create_public_link'),
+    path('public_link/<str:link>/', views.PublicLink, name='documet_public_link'),
 
     # Document Search
     path('search', views.Search, name='document_search'),

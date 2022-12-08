@@ -36,8 +36,6 @@ class Document (models.Model):
     name=models.CharField(max_length=255)
     legacy_no=models.CharField(max_length=255, null=True, blank=True)
 
-    
-
     @property
     def document_no(self):
         document_no = f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
