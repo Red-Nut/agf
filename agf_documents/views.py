@@ -18,6 +18,8 @@ from agf_files.views import HandleUploadedFile
 # 3rd Party
 import json
 import os
+import uuid
+from datetime import date, timedelta
 
 class Index(TemplateView):
     template_name="agf_documents/dashboard.html"
@@ -264,9 +266,33 @@ def MissingFiles(request):
     return HttpResponse(json_resonse)
 
         
+@login_required
+def CreatePublicLink(request,id):
+    print(id)
+    documentFile = DocumentFile.objects.get(id=id)
+    link = uuid.uuid4()
+    expiry = date.today() + timedelta(days=14)
+    documentFile.public_link = link
+    documentFile.link_expiry = expiry
+
+    try:
+        documentFile.save()
+    except:
+        pass
+
+    return redirect(reverse('document', kwargs={'id':documentFile.document_revision.document.id}))
+
+def PublicLink(request, link):
+    documentFile = DocumentFile.objects.get(public_link=link)
+    documentRevision = documentFile.document_revision
+    document = documentRevision.document
+    
 
 
+    context = {
+        'document' : document,
+        'documentRevision' : documentRevision,
+        'documentFile' : documentFile,
+    }
 
-
-
-
+    return render(request, "agf_documents/public.html", context)

@@ -1,0 +1,89 @@
+{% extends 'agf_documents/base.html' %}
+{% block title %}
+Document: {{document.document_no}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body">
+                    <h1>{{document.document_no}}</h1>
+                    <a class="btn btn-primary" href="{{documentFile.file.url}}">Download</a>
+                    <table class="table" style="width: auto;">
+                        <tr>
+                            <th>Document No.</th>
+                            <td>{{document.document_no}}</td>
+                        </tr>
+                        {% if document.legacy_no is not None %}
+                        <tr>
+                            <th>Legacy Number</th>
+                            <td>{{document.legacy_no}}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Name</th>
+                            <td>{{document.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{document.type}}</td>
+                        </tr>
+                        {% if document.sub_type is not None %}
+                        <tr>
+                            <th>Sub-Type</th>
+                            <td>{{document.sub_type}}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Area</th>
+                            <td>{{document.area}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- Revisions -->
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tr><th colspan="5"><h4><b>Document Revision</b></h4></th></tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{documentRevision.get_status_display}}</td>
+                        </tr>
+                        <tr>
+                            <th>Revision</th>
+                            <td>{{documentRevision.revision}}</td>
+                        </tr>
+                        <tr>
+                            <th>Reason</th>
+                            <td>{{documentRevision.get_reason_display}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8 pb-3">
+            <!-- Preview -->
+            <div class="card mb-0" style="height:100%;">
+                <div class="card-body">
+                    {% if documentFile %}
+                    <p class="link" style="text-align:right; position: absolute; right: 30px; top:30px;"><i class="fas fa-expand-arrows-alt fa-2x"></i></p>
+                    <iframe src="{{documentFile.file.url}}#toolbar=0&navpanes=0" width="100%" height="100%"></iframe>
+                    {% else %}
+                        <p>No file available for preview</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
