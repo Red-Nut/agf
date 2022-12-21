@@ -146,7 +146,7 @@ class DocumentRevision (models.Model):
         files = self.document_files.all()
         try:
             file = files[0].file
-            return f"{file.location}{file.name}.{file.ext}" 
+            return file.url() 
         except:
             return "#"
 

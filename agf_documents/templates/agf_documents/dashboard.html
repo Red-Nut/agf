@@ -95,10 +95,10 @@ Documents - Dashboard
         <div id="drawings" class="tab-pane fade">
             <!-- Area Tabs -->
             <ul class="nav nav-tabs">
-                <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#alldrawings">All Areas</a></li>
+                <li class="nav-item active"><a class="nav-link myTab active" data-toggle="tab" href="#alldrawings">All Areas</a></li>
                 
                 {% for area in areas %}
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#draw-area-{{area.code}}">{{area.code}}</a></li>
+                <li class="nav-item"><a class="nav-link myTab" data-toggle="tab" href="#draw-area-{{area.code}}">{{area.code}}</a></li>
                 {% endfor %}
 
             </ul>
@@ -240,7 +240,7 @@ Documents - Dashboard
             }
 
             htmlbody = "";
-            htmlbody += '<tr class="link" onclick="window.location.href=' + "'/documents/document/"+ id[i] + "/'" + '">';
+            htmlbody += '<tr class="link" onclick="Document(' + id[i] + ')">';
             htmlbody += '    <td>' + document_no[i] + '</td>';
             htmlbody += '    <td style="text-align: center;">' + revision[i] + '</td>';
             htmlbody += '    <td>' + name[i] + '</td>';
@@ -260,6 +260,11 @@ Documents - Dashboard
 
         html = htmlareas + htmlallareas;
         document.getElementById("myTables").innerHTML = html;
+    }
+
+    function Document(id){
+        var url_mask = "{% url 'document' id=12345 %}".replace(/12345/, id.toString());
+        window.location.href=url_mask
     }
 
     function loadJson(selector) {
