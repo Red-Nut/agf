@@ -1,0 +1,32 @@
+{% extends 'agf_maintenance/base.html' %}
+{% block title %}
+PM List
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Frequency</th>
+                </tr>
+                {% for pm in pms %} 
+                <tr class="link" onclick="window.location.href='{% url 'pm' pm.id %}'">
+                    <td>PM{{pm.id|stringformat:"04d"}}</td>
+                    <td>{{pm.name}}</td>
+                    <td>{{pm.get_frequency_long}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

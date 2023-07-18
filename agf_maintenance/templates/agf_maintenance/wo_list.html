@@ -1,0 +1,36 @@
+{% extends 'agf_maintenance/base.html' %}
+{% block title %}
+WO List
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Scheduled Date</th>
+                    <th>Priority</th>
+                </tr>
+                </thead>
+                {% for wo in wos %} 
+                <tr class="link" onclick="window.location.href='{% url 'wo' wo.id %}'">
+                    <td>WO{{wo.id|stringformat:"06d"}}</td>
+                    <td>{{wo.name}}</td>
+                    <td>{{wo.sch_date}}</td>
+                    <td>{{wo.get_priority_display}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

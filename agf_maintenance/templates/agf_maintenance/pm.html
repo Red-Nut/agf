@@ -1,0 +1,142 @@
+{% extends 'agf_maintenance/base.html' %}
+{% block title %}
+{{pm.title}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h2>PM{{pm.id|stringformat:"04d"}}: {{pm.name}}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <h4>Procedures</h4>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Sequence</th>
+                            <th>Due At</th>
+                            <th>Procedure</th>
+                        </tr>
+                        </thead>
+                        {% for procedure in procedures %} 
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{% widthratio forloop.counter 1 pm.frequency %} {{pm.get_units_display}}</td>
+                            <td class="link" onclick="window.location.href='{% url 'procedure' procedure.id %}'">{{procedure.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <td colspan="8" style="border-bottom-color:black;"><h4>Enabled Assets</h4></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" style="text-align:center; vertical-align: middle; border-bottom-color:black;">Asset</th>
+                            <th colspan="2" style="text-align:center; vertical-align: middle;">Last WO</th>
+                            <th colspan="2" style="text-align:center; vertical-align: middle;">Next Procedure</th>
+                            <th colspan="2" style="text-align:center; vertical-align: middle;">Next WO</th>
+                            <th rowspan="2" style="text-align:center; vertical-align: middle; border-bottom-color:black;">Actions</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:center;">WO ID</th>
+                            <th style="text-align:center;">Completed On</th>
+                            <th style="text-align:center;">Sequence ID</th>
+                            <th>Procedure</th>
+                            <th style="text-align:center;">WO ID</th>
+                            <th style="text-align:center;">Scheduled Date</th>
+                        </tr>
+                        </thead>
+                        {% for assetpm in pm.assets.all %}
+                        {% if assetpm.enabled %}
+                        <tr>
+                            <td class="link" style="vertical-align: middle;" onclick="window.location.href='{% url 'asset' assetpm.asset.id %}'">{{assetpm.asset.get_name}} ({{assetpm.asset.get_full_asset_no}})</td>
+                            <th style="text-align:center; vertical-align: middle;"></th>
+                            <td style="text-align:center; vertical-align: middle;">{{assetpm.last_complete}}</td>
+                            <td style="text-align:center; vertical-align: middle;">{{assetpm.next_procedure_sch.sequence}}</td>
+                            <td style="vertical-align: middle;">{{assetpm.next_procedure_sch.procedure}}</td>
+                            
+                            {% for object in nextWOs %}
+                            {% if object.asset == assetpm.asset %}
+                            {% if object.WO %}
+                            <td style="text-align:center; vertical-align: middle;"><a class='linkFormat' href="{% url 'wo' object.WO.id %}">{{object.WO.woid}}</a></td>
+                            {% else %}
+                            <td style="text-align:center; vertical-align: middle;">Not yet deployed</td>
+                            {% endif %}
+                            {% if object.WO %}
+                            <td style="text-align:center; vertical-align: middle;">{{object.WO.sch_date}}</td>
+                            {% else %}
+                            <td style="text-align:center; vertical-align: middle;">{{assetpm.next_date}}</td>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            
+                            
+
+                            <td style="text-align:center; vertical-align: middle;">
+                                <a class="btn btn-primary" href="{% url 'deployPM' assetpm.id %}">Deploy</a>
+                                <a class="btn btn-primary" href="{% url 'disableAssetPM' assetpm.id %}">Disable</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+
+                        <tr><td colspan="6" style="height:50px;"></td></tr>
+
+                        <thead>
+                        <tr>
+                            <td colspan="6" style="border-bottom-color:black;"><h4>Disabled Assets</h4></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" style="text-align:center; vertical-align: middle; border-bottom-color:black;">Asset</th>
+                            <th colspan="2" style="text-align:center; vertical-align: middle;">Last WO</th>
+                            <th colspan="2" style="text-align:center; vertical-align: middle;">Next Procedure</th>
+                            <th rowspan="2" style="text-align:center; border-bottom-color:black;">Actions</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:center; border-bottom-color:black;">WO ID</th>
+                            <th style="text-align:center; border-bottom-color:black;">Completed On</th>
+                            <th style="text-align:center; border-bottom-color:black;">Sequence ID</th>
+                            <th style="border-bottom-color:black;">Procedure</th>
+                        </tr>
+                        </thead>
+                        {% for assetpm in pm.assets.all %}
+                        {% if not assetpm.enabled %}
+                        <tr style="color:red;">
+                            <td class="link" style="vertical-align: middle;" onclick="window.location.href='{% url 'asset' assetpm.asset.id %}'">{{assetpm.asset.get_name}} ({{assetpm.asset.get_full_asset_no}})</td>
+                            <th style="text-align:center; vertical-align: middle;"></th>
+                            <td style="text-align:center; vertical-align: middle;">{{assetpm.last_complete}}</td>
+                            <td style="text-align:center; vertical-align: middle;">{{assetpm.next_procedure_sch.sequence}}</td>
+                            <td style="vertical-align: middle;">{{assetpm.next_procedure_sch.procedure}}</td>
+                            <td style="text-align:center; vertical-align: middle;"><a class="btn btn-primary" href="{% url 'enableAssetPM' assetpm.id %}">Enable</a></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

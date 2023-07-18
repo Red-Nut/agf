@@ -1,0 +1,96 @@
+{% extends 'agf_maintenance/base.html' %}
+{% block title %}
+WO{{wo.id|stringformat:"05d"}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h2>WO{{wo.id|stringformat:"05d"}}: {{wo.name}}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table">
+                        {% if not wo.pm %}
+                        <tr>
+                            <th>Type</th>
+                            <td>Corrective Maintenance</td>
+                        </tr>
+                        {% else %} 
+                        <tr>
+                            <th>Type</th>
+                            <td>Preventative Maintenance</td>
+                        </tr>
+                         <tr>
+                            <th>PM</th>
+                            <td class="link" onclick="window.location.href='{% url 'pm' wo.pm.pm.id %}'">{{wo.pm.pm.pmid}}: {{wo.pm.pm.name}}</td>
+                         </tr>
+                        {% endif %}
+
+                         <tr>
+                            <th>Asset</th>
+                            <td class="link" onclick="window.location.href='{% url 'asset' wo.asset.id %}'">{{wo.asset.get_full_asset_no}}: {{wo.asset.get_name}}</td>
+                         </tr>
+
+                        <tr>
+                            <th>Status</th>
+                            <td>{{wo.get_status_display}}</td>
+                        </tr>
+                        <tr>
+                            <th>Priority</th>
+                            <td>{{wo.get_priority_display}}</td>
+                        </tr>
+                        <tr>
+                            <th>Schedule Date</th>
+                            <td>{{wo.sch_date}}</td>
+                        </tr>
+                        {% if wo.status == wo.COMPLETED %}
+                        <tr>
+                            <th>Completed Date</th>
+                            <td>{{wo.complete_date}}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sequence ID</th>
+                                <th>Task</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for woTask in wo.tasks.all %}
+                            <tr>
+                                <td>{{woTask.no}}</td>
+                                {% autoescape off %}
+                                <td>{{woTask.task}}</td>
+                                {% endautoescape %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

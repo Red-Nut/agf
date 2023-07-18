@@ -1,6 +1,6 @@
 {% extends 'agf_hse/base.html' %}
 {% block title %}
-Results: {{questionaire.name}}
+Results: {{questionnaire.name}}
 {% endblock %}
 
 {% block header %}
@@ -8,17 +8,28 @@ Results: {{questionaire.name}}
 
 {% block main %} 
 <div class="container-fluid">
-    <h2>Australian Gasfields: {{questionaire.name}} Results</h2>
-    <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
-        {% if pass %}
-        <i class="c-base">Test Passed</i>
-        {% else %}
-        <i class="c-error">Test Failed</i>
-        {% endif %}
-    </p>
-    {% if not pass %}
-    <a class="btn btn-primary" href="{% url 'induction' id=questionnaire.id %}">Try Again</a>
-    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h2>Australian Gasfields: {{questionnaire.name}} Results</h2>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p><b>Name:</b> {{name}}</p>
+            <p><b>Email:</b> {{email}}</p>
+            <p><b>Score:</b> {{correctCount}}/{{questionCount}} ({{percentage}}%)
+                {% if pass %}
+                <i class="c-base">Test Passed</i></p>
+                <p><b>Expires on:</b> {{expiry|date:"d/m/Y"}}</p>
+                {% else %}
+                <i class="c-error">Test Failed</i>
+                {% endif %}
+            </p>
+            {% if not pass %}
+            <a class="btn btn-primary" href="{% url 'induction' id=questionnaire.id %}">Try Again</a>
+            {% endif %}
+        </div>
+    </div>
 
     {% if questionnaire.show_marking %}
     {% for question in questions %}

@@ -12,8 +12,7 @@ class EmailInline(admin.TabularInline):
 
 class QuestionInline(admin.TabularInline):
     model = Question
-    fields=('question',)
-    readonly_fields=('question',)
+    fields=('order','question','type')
     show_change_link = True
     extra=0
 
@@ -38,3 +37,19 @@ class QuestionAdmin(admin.ModelAdmin):
     def get_ordering(self, request):
         return ['questionnaire', 'order']
 admin.site.register(Question, QuestionAdmin)
+
+
+
+class QuestionaireResultsAnswersInline(admin.TabularInline):
+    model = QuestionaireResultsAnswers
+    readonly_fields = ('answer_id','answer',)
+    can_delete = False
+    extra=0
+
+class QuestionaireResultsAdmin(admin.ModelAdmin):
+    list_display = ['id','questionnaire', 'passed', 'expiry', 'name', 'email', 'completed', 'mark']
+    search_fields = ['name','questionnaire__name']
+    inlines = [QuestionaireResultsAnswersInline]
+    def get_ordering(self, request):
+        return ['expiry']
+admin.site.register(QuestionaireResults, QuestionaireResultsAdmin)

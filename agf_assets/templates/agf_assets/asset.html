@@ -10,13 +10,17 @@ Asset: {{asset.get_asset_no}}
 
 {% block main %}
 <div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <h1>{{asset.name}} ({{asset.get_full_asset_no}})</h1>
+        </div>
+    </div>
     <div class="row">
         <!-- Asset Details -->
-        <div class="col">
+        <div class="col-xl-3">
             <div class="card">
                 <div class="card-body">
-                    <h1>{{asset.name}} ({{asset.get_full_asset_no}})</h1>
-                    <table class="table">
+                    <table class="table" style="width:auto;">
                         <tr>
                             <th>Area</th>
                             <td>{{asset.area}}</td>
@@ -37,29 +41,45 @@ Asset: {{asset.get_asset_no}}
                             <th>Legacy Number</th>
                             <td>{{asset.get_legacy_display}}</td>
                         </tr>
-                        {% if asset.size is not None %}
+                        {% if asset.type.code == 'GPL' or asset.type.code == 'TPL' %}
+                        <tr><td colspan=2></td></tr>
                         <tr>
-                            <th>Size</th>
-                            <td>{{asset.size}}</td>
+                            <th>Pipeline Grade</th>
+                            <td>{{asset.line_rating.code}}</td>
                         </tr>
-                        {% endif %}
-                        {% if asset.line_content is not None %}
                         <tr>
-                            <th>Line Content</th>
-                            <td>{{asset.line_content}}</td>
+                            <th>Outer Diamter</th>
+                            <td>{{asset.size}} mm</td>
                         </tr>
-                        {% endif %}
-                        {% if asset.line_rating is not None %}
                         <tr>
-                            <th>Line Rating</th>
-                            <td>{{asset.line_rating}}</td>
+                            <th>Wall Thickness</th>
+                            <td>{{asset.valve_spec}} mm</td>
                         </tr>
-                        {% endif %}
-                        {% if asset.valve_spec is not None %}
-                        <tr>
-                            <th>Valve Specification</th>
-                            <td>{{asset.valve_spec}}</td>
-                        </tr>
+                        {% else %}
+                            {% if asset.size is not None %}
+                            <tr>
+                                <th>Size</th>
+                                <td>{{asset.size}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if asset.line_content is not None %}
+                            <tr>
+                                <th>Line Content</th>
+                                <td>{{asset.line_content}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if asset.line_rating is not None %}
+                            <tr>
+                                <th>Line Rating</th>
+                                <td>{{asset.line_rating}}</td>
+                            </tr>
+                            {% endif %}
+                            {% if asset.valve_spec is not None %}
+                            <tr>
+                                <th>Valve Specification</th>
+                                <td>{{asset.valve_spec}}</td>
+                            </tr>
+                            {% endif %}
                         {% endif %}
                     </table>
                 </div>
@@ -164,23 +184,21 @@ Asset: {{asset.get_asset_no}}
                     </table>
                 </div>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
-        
-        <!-- Reference Documents -->
-        <div class="col">
-            <div class="card">
+
+        <!-- Asset Children -->
+        <div class="col-xl-3" style="padding-bottom:12px">
+            <div class="card" style="height:100%;">
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table table-striped">
+                        <thead>
                         <tr>
-                            <th colspan="2">Reference Documents</th>
+                            <th colspan="2"><h4>Child Assets</h4></th>
                         </tr>
-                        <tr>
-                            <th>Document Number</th>
-                            <th>Title</th>
-                        </tr>
+                        </thead>
                         {% for ref in asset.asset_document_reference.all %}
-                        <tr class="link" onclick="window.location.href='/documents/document/{{ref.document.id}}/'">
+                        <tr class="link" onclick="window.location.href='{% url 'document' ref.document.id %}'">
                             <td>{{ref.document.document_no}}</td>
                             <td>{{ref.document.name}}</td>
                         </tr>
@@ -190,7 +208,89 @@ Asset: {{asset.get_asset_no}}
             </div>
         </div>
 
-        
+        <!-- Reference Documents -->
+        <div class="col-xl-6" style="padding-bottom:12px">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="2"><h4>Reference Documents</h4></th>
+                        </tr>
+                        <tr>
+                            <th>Document Number</th>
+                            <th>Title</th>
+                        </tr>
+                        </thead>
+                        {% for ref in asset.asset_document_reference.all %}
+                        <tr class="link" onclick="window.location.href='{% url 'document' ref.document.id %}'">
+                            <td>{{ref.document.document_no}}</td>
+                            <td>{{ref.document.name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Work Orders -->
+        <div class="col-xl-6" style="padding-bottom:12px">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="2"><h4>Work Orders</h4></th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Scheduled Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for wo in asset.wos.all %}
+                            <tr class="link" onclick="window.location.href='{% url 'wo' wo.id %}'">
+                                <td>{{wo.woid}}</td>
+                                <td>{{wo.name}}</td>
+                                <td>{{wo.get_status_display}}</td>
+                                <td>{{wo.sch_date}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preventative Maintenance -->
+        <div class="col-xl-6" style="padding-bottom:12px">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th colspan="2"><h4>Preventative Maintenance</h4></th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                        </tr>
+                        </thead>
+                        {% for assetpm in asset.pms.all %}
+                        <tr class="link" onclick="window.location.href='{% url 'pm' assetpm.pm.id %}'">
+                            <td>PM{{assetpm.pm.id|stringformat:"04d"}}</td>
+                            <td>{{assetpm.pm.title}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

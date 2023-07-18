@@ -1,0 +1,58 @@
+{% extends 'agf_maintenance/base.html' %}
+{% block title %}
+Procedure: {{procedure.name}}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h2>Procedure: {{procedure.name}}</h2>
+            </div>
+        </div>
+
+        <!-- Tasks -->
+        <div class="card">
+            <div class="card-body">
+                <h2>Tasks</h2>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Sequence ID</th>
+                        <th>Task</th>
+                    </tr>
+                    </thead>
+                    {% for pt in procedure.tasks.all %} 
+                    <tr>
+                        <td>{{pt.no}}</td>
+                        {% autoescape off %}
+                        <td>{{pt.task.description}}</td>
+                        {% endautoescape %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="card">
+            <div class="card-body">
+                <h2>Documents</h2>
+                <table class="table table-striped">
+                    {% for pd in procedure.documents.all %} 
+                    <tr>
+                        <td class="link" onclick="window.location.href='{% url 'document' pt.document.id %}'">{{pt.document}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

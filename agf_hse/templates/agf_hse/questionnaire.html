@@ -8,13 +8,31 @@
 
 {% block main %} 
 <div class="container-fluid">
-    <form name=questionnaire action="{% url 'induction' id=questionnaire.id %}" method="POST">
+    <form name=questionnaire action="{% url 'questionnaire_complete' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="questionnaireID" value="{{questionnaire.id}}">
         <div class="card">
             <div class="card-body">
                 <h2>Australian Gasfields: {{questionnaire.name}}</h2>
-
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><b>Description</b></h4>
+                {% autoescape off %}
+                {{questionnaire.description}}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><b>Instructions</b></h4>
+                {{questionnaire.instructions}}
+                {% endautoescape %}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><b>Participant Details</b></h4>
                 <!--- Name and Email -->
                 <table>
                     <tr>

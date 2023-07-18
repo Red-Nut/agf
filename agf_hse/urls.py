@@ -23,5 +23,6 @@ urlpatterns = [
 
     path('induction/<int:id>/', views.QuestionnairePage, name='induction'),
     path('induction/<str:url>/', views.QuestionnaireURL, name='induction_str'),
-    path('formSubmission/', views.QuestionnaireComplete, name='questionnaire_complete')
+    path('inductionComplete/', views.QuestionnaireComplete, name='questionnaire_complete'),
+    path('inductionResults/<int:id>/', views.QuestionnaireResults, name='questionnaire_results')
 ]

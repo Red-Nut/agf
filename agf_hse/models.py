@@ -15,6 +15,9 @@ class Questionnaire (models.Model):
             MaxValueValidator(100)
         ])
     url=models.CharField(max_length=255, null=True, blank=True, unique=True)
+    description=models.CharField(max_length=1000)
+    instructions=models.CharField(max_length=1000)
+    valid_duration_days=models.IntegerField()
 
     def __str__(self):
         return f"{self.name}"
@@ -48,3 +51,15 @@ class Answer(models.Model):
     def __str__(self):
         return f"{self.answer}"
 
+class QuestionaireResults(models.Model):
+    questionnaire=models.ForeignKey(Questionnaire,on_delete=models.CASCADE)
+    completed=models.DateTimeField(auto_now=True)
+    mark = models.IntegerField()
+    passed = models.BooleanField()
+    name=models.CharField(max_length=40)
+    email=models.EmailField()
+    expiry=models.DateField(null=True)
+
+class QuestionaireResultsAnswers(models.Model):
+    questionnaireResults=models.ForeignKey(QuestionaireResults,on_delete=models.CASCADE, related_name='answers')
+    answer=models.ForeignKey(Answer,on_delete=models.RESTRICT)

@@ -31,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.10.10.80','agf.my.to']
+ALLOWED_HOSTS = ['10.10.10.10','agf.my.to']
 
 
 # Application definition
