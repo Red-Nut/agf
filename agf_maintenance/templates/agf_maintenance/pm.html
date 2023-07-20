@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-bottom: 12px;">
         <div class="col-4">
             <div class="card" style="height:100%;">
                 <div class="card-body">
@@ -28,6 +28,7 @@
                             <th>Sequence</th>
                             <th>Due At</th>
                             <th>Procedure</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         {% for procedure in procedures %} 
@@ -35,6 +36,14 @@
                             <td>{{forloop.counter}}</td>
                             <td>{% widthratio forloop.counter 1 pm.frequency %} {{pm.get_units_display}}</td>
                             <td class="link" onclick="window.location.href='{% url 'procedure' procedure.id %}'">{{procedure.name}}</td>
+                            <td>
+                                <select id="procedure{{procedure.id}}">
+                                    {% for assetPM in pm.assets.all %}
+                                    <option value="{{assetPM.id}}">{{assetPM.asset.get_full_asset_no}}</option>
+                                    {% endfor %}
+                                </select>
+                                <a class="btn btn-primary" href="{% url 'deployProcedure' procedure.id pm.assets.first.id %}">Create WO</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -131,6 +140,37 @@
                         </tr>
                         {% endif %}
                         {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Work Order List</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Status</th>
+                                <th>Name</th>
+                                <th>Scheduled Date</th>
+                                <th>Completed Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for wo in wos %}
+                            <tr class="link" onclick="window.location.href='{% url 'wo' wo.id %}'">
+                                <td>{{wo.woid}}</td>
+                                <td>{{wo.get_status_display}}</td>
+                                <td>{{wo.name}}</td>
+                                <td>{{wo.sch_date}}</td>
+                                <td>{{wo.complete_date}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>

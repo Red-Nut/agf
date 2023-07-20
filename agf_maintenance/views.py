@@ -36,6 +36,8 @@ def PM_view(request, id):
 
     procedures = pm.get_procedures()
 
+    wos = WorkOrder.objects.filter(pm__pm=pm)
+
     nextWOs = []
 
     assetPMs = pm.assets.all()
@@ -59,6 +61,7 @@ def PM_view(request, id):
         "pm" : pm,
         "procedures" : procedures,
         "nextWOs" : nextWOs,
+        "wos" : wos,
     }
 
     return render(request, "agf_maintenance/pm.html", context)
@@ -75,7 +78,7 @@ def Procedure_view(request, id):
 
 @login_required
 def WO_List(request):
-    wos = WorkOrder.objects.all()
+    wos = WorkOrder.objects.filter(status=WorkOrder.DEPLOYED)
 
     context = {
         "wos" : wos,
@@ -97,13 +100,19 @@ def WO_view(request, id):
 def DeployWO(request, id):
     assetPM = AssetPM.objects.get(id=id)
 
-    Deploy(assetPM)
+    return Deploy(assetPM, None)
 
-    return redirect(PM_view, id=assetPM.pm.id)
+@login_required
+def DeployProcedure(request, pid, aPMid):
+    procedure = Procedure.objects.get(id=pid)
+    assetPM = AssetPM.objects.get(id=aPMid)
 
-def Deploy(assetPM):
-    next_procedure_sch = assetPM.next_procedure_sch
-    procedure = next_procedure_sch.procedure
+    return Deploy(assetPM, procedure)
+
+def Deploy(assetPM, procedure):
+    if procedure is None:
+        next_procedure_sch = assetPM.next_procedure_sch
+        procedure = next_procedure_sch.procedure
 
     myDate = date.today() + timedelta(weeks=assetPM.pm.sch_ahead)
     
@@ -127,11 +136,21 @@ def Deploy(assetPM):
                 no = pt.no
             )
 
+        procedureDocuments = ProcedureDocuments.objects.filter(procedure=procedure)
+        for pd in procedureDocuments:
+            woDocument = WODocuments.objects.create(
+                wo = wo,
+                document = pd.document
+            )
+
         assetPM.last_deployed = myDate
         assetPM.last_procedure = next_procedure_sch.sequence
         assetPM.save()
+
+        return redirect(WO_view, id=wo.id)
     except Exception as e:
         print(e)
+        return redirect(PM_view, id=assetPM.pm.id)
 
     return
 
@@ -169,4 +188,27 @@ def EnableAssetPM(request, id):
         print(e)
 
     return redirect(PM_view, id = assetPM.pm.id)
+
+@login_required
+def CompleteWO(request,id):
+    wo = WorkOrder.objects.get(id=id)
+
+    if wo.status is not wo.COMPLETED:
+        myDate = date.today()
+        wo.complete_date = myDate
+        wo.status = wo.COMPLETED
+        try:
+            wo.save()
+        except Exception as e:
+            print(e)
+            # TODO: log warning
+
+    
+    else:
+        pass
+        # TODO: log warning
+
+    return redirect(WO_view, id=id)
+
+
 

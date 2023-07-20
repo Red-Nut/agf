@@ -379,3 +379,7 @@ class WOTask(models.Model):
     
     class Meta:
         ordering = ['no']
+
+class WODocuments(models.Model):
+    wo = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name="documents")
+    document = models.ForeignKey(Document, on_delete=models.RESTRICT)

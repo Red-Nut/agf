@@ -28,7 +28,7 @@ class Index(TemplateView):
         context = super().get_context_data(**kwargs)
 
         context['areas'] = Area.objects.order_by("code").all()
-        context['documentTypes'] = DocumentType.objects.order_by("code").all()
+        context['documentTypes'] = DocumentType.objects.exclude(code="MAIN").order_by("code").all()
 
         context['data'] = json.dumps(
             [
@@ -87,7 +87,10 @@ def NewDocumentRevision(request,id):
         if form.is_valid():
             document = Document.objects.get(id=int(form.data['document']))
             revision = form.data['revision']
-            reason = int(form.data['reason'])
+            if form.data['reason']:
+                reason = int(form.data['reason'])
+            else:
+                reason = None
             status = int(form.data['status'])
 
             documentRevision = DocumentRevision.objects.create(
@@ -161,7 +164,7 @@ def Search(request):
             
             
     areas = Area.objects.order_by("code").all()
-    types = DocumentType.objects.order_by("code").all()
+    types = DocumentType.objects.exclude(code="MAIN").order_by("code").all()
     sub_types = DocumentSubType.objects.order_by("name").all()
 
     context = {

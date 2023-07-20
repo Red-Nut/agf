@@ -36,6 +36,9 @@ class Document (models.Model):
     name=models.CharField(max_length=255)
     legacy_no=models.CharField(max_length=255, null=True, blank=True)
 
+    def __str__(self):
+        return self.document_no()
+
     @property
     def document_no(self):
         document_no = f"{self.area.code}-{self.type.code}-{self.sequential_no:04}"
@@ -77,9 +80,6 @@ class Document (models.Model):
             return "-"
         else:
             return self.legacy_no
-
-    def __str__(self):
-        return self.document_no
 
 class DocumentRevision (models.Model):
     DRAFT = 1
@@ -128,7 +128,10 @@ class DocumentRevision (models.Model):
     status=models.PositiveSmallIntegerField(choices=STATUS)
     
     def __str__(self):
-        return f"{self.document}_{self.revision}"
+        if self.revision is None:
+            return self.document
+        else:
+            return f"{self.document}_{self.revision}"
 
     def my_revision_display(self):
         if self.revision is None:
@@ -142,13 +145,28 @@ class DocumentRevision (models.Model):
         else:
             return self.get_reason_display()
 
+    @property
     def my_link(self):
-        files = self.document_files.all()
-        try:
-            file = files[0].file
+        count = self.document_files.count()
+        if count == 1:
+            df = self.document_files.first()
+            file = df.file
             return file.url() 
-        except:
+        else:
             return "#"
+        
+    @property
+    def file_name(self):
+        count = self.document_files.count()
+        if count == 1:
+            df = self.document_files.first()
+            file = df.file
+            if file:
+                return f"{file.name}.{file.ext}" 
+            else: 
+                return "Error"
+        else:
+            return f"{self.document} (multiple files)"
 
 class DocumentReference (models.Model):
     document=models.ForeignKey(Document, on_delete=models.CASCADE, related_name='reference_documents')

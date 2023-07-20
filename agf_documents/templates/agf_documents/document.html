@@ -111,7 +111,7 @@ Document: {{document.document_no}}
                                             <label for="id_reason">Reason:</label>
                                         </th>
                                         <td>
-                                            <select name="reason" required="" id="id_reason">
+                                            <select name="reason" id="id_reason">
                                                 <option value="" selected="">---------</option>
                                                 {% for reason in reasons %}
                                                 <option value="{{reason.0}}">{{reason.1}}</option>

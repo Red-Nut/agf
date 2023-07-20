@@ -14,6 +14,7 @@ WO List
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Status</th>
                     <th>Name</th>
                     <th>Scheduled Date</th>
                     <th>Priority</th>
@@ -22,6 +23,7 @@ WO List
                 {% for wo in wos %} 
                 <tr class="link" onclick="window.location.href='{% url 'wo' wo.id %}'">
                     <td>WO{{wo.id|stringformat:"06d"}}</td>
+                    <td>{{wo.get_status_display}}</td>
                     <td>{{wo.name}}</td>
                     <td>{{wo.sch_date}}</td>
                     <td>{{wo.get_priority_display}}</td>

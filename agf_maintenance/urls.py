@@ -13,7 +13,10 @@ urlpatterns = [
     
 
     path('deployPM/<int:id>/', views.DeployWO, name='deployPM'),
+    path('deployProcedure/<int:pid>/<int:aPMid>/', views.DeployProcedure, name='deployProcedure'),
     path('deployAll/', views.DeployAll),
     path('disableAssetPM/<int:id>/', views.DisableAssetPM, name='disableAssetPM'),
     path('enableAssetPM/<int:id>/', views.EnableAssetPM, name='enableAssetPM'),
+
+    path('completeWO/<int:id>/', views.CompleteWO, name='completeWO'),
 ]

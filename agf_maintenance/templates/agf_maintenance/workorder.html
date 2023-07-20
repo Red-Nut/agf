@@ -17,7 +17,7 @@ WO{{wo.id|stringformat:"05d"}}
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-bottom: 12px;">
         <div class="col-4">
             <div class="card" style="height:100%;">
                 <div class="card-body">
@@ -85,6 +85,53 @@ WO{{wo.id|stringformat:"05d"}}
                             </tr>
                             {% endfor %}
                         </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body"> 
+                    <h2>Actions</h2>
+                    {% if wo.status == wo.DEPLOYED %}
+                    <a class='btn btn-primary' href='{% url 'completeWO' wo.id %}'>Complete</a>
+                    {% endif %}
+                    
+                    {% if wo.status != wo.DEPLOYED %}
+                    <a class='btn btn-primary' href='#'>Redeploy (under development)</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body"> 
+                    <h2>Attachments</h2>
+                    <table class="table table-striped" style="width: auto; min-width: 40vw;">
+                        {% for wodoc in wo.documents.all %}
+                        {% with wodoc.document.revisions.last as rev %}
+                        <tr>
+                            <td style="vertical-align: middle;"
+                            {% if rev.my_link == "#" %}
+                            onclick="{% url 'document' wodoc.document.id %}"
+                            {% endif %}
+                            >
+                                {{rev.file_name}}
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <a class="btn btn-primary" href="{{wodoc.document.revisions.last.my_link}}" target="blank" download>
+                                    Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
                     </table>
                 </div>
             </div>
