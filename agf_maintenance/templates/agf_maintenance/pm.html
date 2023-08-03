@@ -12,6 +12,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
+                    <!-- Title -->
                     <h2>PM{{pm.id|stringformat:"04d"}}: {{pm.name}}</h2>
                 </div>
             </div>
@@ -21,6 +22,7 @@
         <div class="col-4">
             <div class="card" style="height:100%;">
                 <div class="card-body">
+                    <!-- Procedures -->
                     <h4>Procedures</h4>
                     <table class="table table-striped">
                         <thead>
@@ -37,12 +39,12 @@
                             <td>{% widthratio forloop.counter 1 pm.frequency %} {{pm.get_units_display}}</td>
                             <td class="link" onclick="window.location.href='{% url 'procedure' procedure.id %}'">{{procedure.name}}</td>
                             <td>
-                                <select id="procedure{{procedure.id}}">
+                                <select id="procedureSelect{{procedure.id}}" onchange="CreateWoUpdate({{procedure.id}})">
                                     {% for assetPM in pm.assets.all %}
                                     <option value="{{assetPM.id}}">{{assetPM.asset.get_full_asset_no}}</option>
                                     {% endfor %}
                                 </select>
-                                <a class="btn btn-primary" href="{% url 'deployProcedure' procedure.id pm.assets.first.id %}">Create WO</a>
+                                <a id="procedureAction{{procedure.id}}" class="btn btn-primary" href="{% url 'deployProcedure' procedure.id pm.assets.first.id %}">Create WO</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -156,6 +158,7 @@
                                 <th>ID</th>
                                 <th>Status</th>
                                 <th>Name</th>
+                                <th>Asset</th>
                                 <th>Scheduled Date</th>
                                 <th>Completed Date</th>
                             </tr>
@@ -166,6 +169,7 @@
                                 <td>{{wo.woid}}</td>
                                 <td>{{wo.get_status_display}}</td>
                                 <td>{{wo.name}}</td>
+                                <td>{{wo.asset}}</td>
                                 <td>{{wo.sch_date}}</td>
                                 <td>{{wo.complete_date}}</td>
                             </tr>
@@ -177,6 +181,18 @@
         </div>
     </div>
 </div>
+<script>
 
+    function CreateWoUpdate(id){
+        selectEl = document.getElementById('procedureSelect'+id);
+        anchorEl = document.getElementById('procedureAction'+id);
+
+        value = selectEl.options[selectEl.selectedIndex].value;
+
+        var url_mask = "{% url 'deployProcedure' pid=6789 aPMid=12345 %}".replace(/12345/, value.toString()).replace(/6789/, id.toString());
+
+        anchorEl.href = url_mask;
+    }
+</script>
 
 {% endblock %}

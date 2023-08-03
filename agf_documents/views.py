@@ -43,7 +43,7 @@ class Index(TemplateView):
                     'document_no': obj.document.document_no,
                     'name': obj.document.name,
                     'legacy_no': obj.document.my_legacy_no_display(),
-                    'link': obj.my_link(),
+                    'link': obj.my_link_generator(),
                 }
                 for obj in DocumentRevision.objects.filter(status=DocumentRevision.CURRENT).order_by("document__type", "document__sub_type", "document__area").all()
             ]

@@ -37,7 +37,7 @@ class Document (models.Model):
     legacy_no=models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.document_no()
+        return self.document_no
 
     @property
     def document_no(self):
@@ -144,6 +144,15 @@ class DocumentRevision (models.Model):
             return "-"
         else:
             return self.get_reason_display()
+
+    def my_link_generator(self):
+        count = self.document_files.count()
+        if count == 1:
+            df = self.document_files.first()
+            file = df.file
+            return file.url() 
+        else:
+            return "#"
 
     @property
     def my_link(self):

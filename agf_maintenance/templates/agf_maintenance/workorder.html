@@ -12,6 +12,7 @@ WO{{wo.id|stringformat:"05d"}}
         <div class="col">
             <div class="card">
                 <div class="card-body">
+                    <!-- WO Title -->
                     <h2>WO{{wo.id|stringformat:"05d"}}: {{wo.name}}</h2>
                 </div>
             </div>
@@ -21,6 +22,7 @@ WO{{wo.id|stringformat:"05d"}}
         <div class="col-4">
             <div class="card" style="height:100%;">
                 <div class="card-body">
+                    <!-- WO Details -->
                     <table class="table">
                         {% if not wo.pm %}
                         <tr>
@@ -68,6 +70,7 @@ WO{{wo.id|stringformat:"05d"}}
         <div class="col-8">
             <div class="card" style="height:100%;">
                 <div class="card-body">
+                    <!--- Tasks -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -95,6 +98,7 @@ WO{{wo.id|stringformat:"05d"}}
         <div class="col">
             <div class="card">
                 <div class="card-body"> 
+                    <!-- Actions -->
                     <h2>Actions</h2>
                     {% if wo.status == wo.DEPLOYED %}
                     <a class='btn btn-primary' href='{% url 'completeWO' wo.id %}'>Complete</a>
@@ -112,27 +116,42 @@ WO{{wo.id|stringformat:"05d"}}
         <div class="col">
             <div class="card">
                 <div class="card-body"> 
+                    <!-- Attachments -->
                     <h2>Attachments</h2>
                     <table class="table table-striped" style="width: auto; min-width: 40vw;">
                         {% for wodoc in wo.documents.all %}
                         {% with wodoc.document.revisions.last as rev %}
                         <tr>
-                            <td style="vertical-align: middle;"
-                            {% if rev.my_link == "#" %}
-                            onclick="{% url 'document' wodoc.document.id %}"
-                            {% endif %}
-                            >
+                            {% if wodoc.document.type.code == "MAIN" %}
+                            <td style="vertical-align: middle;">   
                                 {{rev.file_name}}
                             </td>
+                            {% else %}
+                            <td style="vertical-align: middle;" class="link" onclick=" window.location.href='{% url 'document' wodoc.document.id %}'">
+                                {{wodoc.document}}
+                            </td>
+                            {% endif %}
+                            
                             <td style="vertical-align: middle;">
-                                <a class="btn btn-primary" href="{{wodoc.document.revisions.last.my_link}}" target="blank" download>
-                                    Download
-                                </a>
+                                {% if rev.my_link == "#" %}
+                                <a class="btn btn-primary" href="{% url 'document' id=wodoc.document.id %}">View Document</a>
+                                {% else %}
+                                <a class="btn btn-primary" href="{{wodoc.document.revisions.last.my_link}}" target="blank" download>Download</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endwith %}
                         {% endfor %}
                     </table>
+                    <br>
+                    <hr>
+                    <!-- Add attachments -->
+                    <form action="{% url 'attachMaintenanceDocument' id=wo.id %}" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <label for="id_file">Upload a file:</label>
+                        <input type="file" name="file" required="" id="id_file">
+                        <input class="btn btn-primary" type="submit" value="Upload">
+                    </form>
                 </div>
             </div>
         </div>

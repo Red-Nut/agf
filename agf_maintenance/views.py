@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 # This module imports
-from agf_assets.models import *
 from .models import *
+
+# Other Module imports
+from agf_assets.models import *
+from agf_documents.models import *
+from agf_files.views import HandleUploadedFile
 
 # Third party imports
 from datetime import date
@@ -36,7 +41,7 @@ def PM_view(request, id):
 
     procedures = pm.get_procedures()
 
-    wos = WorkOrder.objects.filter(pm__pm=pm)
+    wos = WorkOrder.objects.filter(pm__pm=pm).order_by('-complete_date', '-id')
 
     nextWOs = []
 
@@ -104,12 +109,16 @@ def DeployWO(request, id):
 
 @login_required
 def DeployProcedure(request, pid, aPMid):
+    print(f"Procedure:{pid}")
+    print(f"AssetPM:{aPMid}")
     procedure = Procedure.objects.get(id=pid)
     assetPM = AssetPM.objects.get(id=aPMid)
 
     return Deploy(assetPM, procedure)
 
 def Deploy(assetPM, procedure):
+    print(f"Procedure:{procedure.id}")
+    print(f"AssetPM:{assetPM.id}")
     if procedure is None:
         next_procedure_sch = assetPM.next_procedure_sch
         procedure = next_procedure_sch.procedure
@@ -210,5 +219,53 @@ def CompleteWO(request,id):
 
     return redirect(WO_view, id=id)
 
+@login_required
+def AttachMaintenanceDocument(request,id):
+    if request.method == "POST":
+        if request.FILES['file']:
+            try:
+                wo = WorkOrder.objects.get(id=id)
+                asset = wo.asset
+                area = asset.area
+                docType = DocumentType.objects.filter(code='MAIN').first()
+                subType = None
+                suffix = None
+                sheet = None
+                name = request.FILES['file'].name
+                legacy_no = None
 
+                latestDocument = Document.objects.filter(area=area, type=docType).order_by("-sequential_no").first()
+                if latestDocument != None:
+                    nextNum = latestDocument.sequential_no + 1
+                else:
+                    nextNum = 1
+
+                document = Document.objects.create(
+                    area = area,
+                    type = docType,
+                    sub_type = subType,
+                    sequential_no = nextNum,
+                    suffix = suffix,
+                    sheet = sheet,
+                    name = name,
+                    legacy_no = legacy_no
+                )
+
+                documentRevision = DocumentRevision.objects.create(
+                    document = document,
+                    revision = None,
+                    reason = None,
+                    status = DocumentRevision.CURRENT
+                )
+
+                woDocument = WODocuments.objects.create(
+                    wo = wo,
+                    document = document
+                )
+
+                HandleUploadedFile(request.FILES['file'], documentRevision, request.user)    
+            except Exception as e:
+                print (e)
+
+    return redirect(reverse('wo', kwargs={'id':id}))
 

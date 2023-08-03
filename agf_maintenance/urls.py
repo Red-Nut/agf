@@ -19,4 +19,6 @@ urlpatterns = [
     path('enableAssetPM/<int:id>/', views.EnableAssetPM, name='enableAssetPM'),
 
     path('completeWO/<int:id>/', views.CompleteWO, name='completeWO'),
+    
+    path('attachMaintenanceDocument/<int:id>/', views.AttachMaintenanceDocument, name='attachMaintenanceDocument'),
 ]
